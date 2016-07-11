@@ -32,33 +32,7 @@ class ImageManager
     {
         $this->storage_name = $storage_name;
     }
-
-    /**
-     * @return string
-     * @throws \Exception
-     */
-    public static function getStorageAliasByStorageName($storage_name)
-    {
-        $storage_aliases_arr = \OLOG\ConfWrapper::getRequiredValue(ImageManagerConstants::MODULE_NAME . '.' . ImageManagerConfigKeys::STORAGE_ALIASES_ARR);
-
-        $storage_alias = array_search($storage_name, $storage_aliases_arr);
-        \OLOG\Assert::assert($storage_alias);
-
-        return $storage_alias;
-    }
-
-    public static function getAvailableStorageNamesArr()
-    {
-        $storage_aliases_arr = \OLOG\ConfWrapper::getRequiredValue(ImageManagerConstants::MODULE_NAME . '.' . ImageManagerConfigKeys::STORAGE_ALIASES_ARR);
-
-        $storage_names_arr = [];
-        foreach ($storage_aliases_arr as $storage_alias => $storage_name) {
-            $storage_names_arr[$storage_name] = $storage_name;
-        }
-        
-        return $storage_names_arr;
-    }
-
+    
     public function output($image_preset_path_in_storage)
     {
         list($image_path_in_storage, $preset_name) = $this->acquirePresetNameAndImageNameFromUrl($image_preset_path_in_storage);
@@ -107,7 +81,7 @@ class ImageManager
 
     public function getImageUrlByPreset($image_path, $preset_name)
     {
-        $storage_alias = self::getStorageAliasByStorageName($this->getStorageName());
+        $storage_alias = \OLOG\ImageManager\ImageManagerConfigWrapper::getStorageAliasByStorageName($this->getStorageName());
         return ImageAction::getUrl($storage_alias, $preset_name . '/' . $image_path);
     }
 
@@ -138,7 +112,8 @@ class ImageManager
         }
         $image_path_in_storage = self::generateNewImageFileNameAndPath($file_extension);
 
-        $default_upload_preset = \OLOG\ConfWrapper::getRequiredValue(ImageManagerConstants::MODULE_NAME . '.' . ImageManagerConfigKeys::DEFAULT_UPLOAD_PRESET);
+        $image_manager_config_obj = \OLOG\ImageManager\ImageManagerConfigWrapper::getImageManagerConfigObj();
+        $default_upload_preset = $image_manager_config_obj->getDefaultUploadPreset();
 
         $this->saveImageToStorage($source_image_file_path, $image_path_in_storage, $default_upload_preset, $save_params_arr);
 
@@ -147,7 +122,8 @@ class ImageManager
 
     protected function saveImageToStorage($source_image_path_in_file_system, $destiantion_image_file_path_in_storage, $preset_name, $save_params_arr = ['quality' => 100])
     {
-        $tmp_dir = \OLOG\ConfWrapper::getRequiredValue(ImageManagerConstants::MODULE_NAME . '.' . ImageManagerConfigKeys::TEMP_DIR);
+        $image_manager_config_obj = \OLOG\ImageManager\ImageManagerConfigWrapper::getImageManagerConfigObj();
+        $tmp_dir = $image_manager_config_obj->getTempDir();
 
         $imagine_obj = new \Imagine\Gd\Imagine();
         $image = $imagine_obj->open($source_image_path_in_file_system);

@@ -16,7 +16,9 @@ class ImageAction
 
     public function action($storage_alias, $image_path)
     {
-        $storage_aliases_arr = \OLOG\ConfWrapper::getRequiredValue(ImageManagerConstants::MODULE_NAME . '.' . ImageManagerConfigKeys::STORAGE_ALIASES_ARR);
+        $image_manager_config_obj = \OLOG\ImageManager\ImageManagerConfigWrapper::getImageManagerConfigObj();
+        
+        $storage_aliases_arr = $image_manager_config_obj->getStoragesAliasesArr();
         
         \OLOG\Exits::exit404If(!array_key_exists($storage_alias, $storage_aliases_arr));
         

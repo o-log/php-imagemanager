@@ -3,7 +3,7 @@
 
 namespace ImageManagerDemo;
 
-use OLOG\ImageManager\ImageManagerConfigKeys;
+use OLOG\ImageManager\ImageManagerConfig;
 use OLOG\ImageManager\ImageManagerConstants;
 use OLOG\ImageManager\ImagePresets;
 use OLOG\Storage\LocalStorage;
@@ -38,13 +38,13 @@ class ImageManagerDemoCommonConfig
                 self::STORAGE1_NAME => new LocalStorage('/mnt/s1/'),
             ),
         );
-
-        $conf[ImageManagerConstants::MODULE_NAME] = array(
-            ImageManagerConfigKeys::STORAGE_ALIASES_ARR => [
+        
+        $conf[ImageManagerConstants::MODULE_NAME] = new ImageManagerConfig(
+            [
                 's1' => self::STORAGE1_NAME
             ],
-            ImageManagerConfigKeys::DEFAULT_UPLOAD_PRESET => ImagePresets::IMAGE_PRESET_UPLOAD,
-            ImageManagerConfigKeys::TEMP_DIR => '/tmp/'
+            ImagePresets::IMAGE_PRESET_UPLOAD,
+            '/tmp/'
         );
 
         $conf['php-bt'] = [
