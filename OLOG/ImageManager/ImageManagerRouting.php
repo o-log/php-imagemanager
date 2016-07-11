@@ -4,6 +4,8 @@
 namespace OLOG\ImageManager;
 
 
+use OLOG\Image\ImageAction;
+
 class ImageManagerRouting
 {
     static public function register()

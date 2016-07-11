@@ -48,7 +48,7 @@ class ImageListAction implements
                         new \OLOG\ImageManager\CRUDFormWidgetImageUploader(
                             'file_path_in_storage',
                             'storage_name',
-                            \OLOG\Storage\StorageFactory::getStorageNamesInConfigArr(), //@TODO storages from aliases
+                            \OLOG\ImageManager\ImageManager::getAvailableStorageNamesArr(),
                             \OLOG\ImageManager\ImageUploadAction::getUrl()
                         )
                     )

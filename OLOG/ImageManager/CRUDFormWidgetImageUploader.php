@@ -108,8 +108,8 @@ class CRUDFormWidgetImageUploader implements InterfaceCRUDFormWidget
                     <select name="upload_storage_name" class="form-control upload_storage_name_input" onchange="onChange(this)">
                         <option></option>
                         <?php
-                        foreach ($this->getStoragesArr() as $storage_name_field => $storage_id) {
-                            echo '<option value="' . $storage_id . '">' . $storage_name_field . '</option>';
+                        foreach ($this->getStoragesArr() as $storage_name => $storage_id) {
+                            echo '<option value="' . \OLOG\Sanitize::sanitizeAttrValue($storage_id) . '">' . \OLOG\Sanitize::sanitizeTagContent($storage_name) . '</option>';
                         }
                         ?>
                     </select>
@@ -129,7 +129,7 @@ class CRUDFormWidgetImageUploader implements InterfaceCRUDFormWidget
                              aria-valuemax="100" style="width: 0;"></div>
                     </div>
                     <div class="uploaded_image">
-                        <?php //@TODO existing image ?>
+                        <?php //@TODO existing image? ?>
                     </div>
                 </div>
             </div>

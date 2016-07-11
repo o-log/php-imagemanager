@@ -3,10 +3,12 @@
 namespace OLOG\ImageManager;
 
 
+use OLOG\Image\ImageAction;
+
 class ImageManager
 {
     protected $storage_name;
-    
+
     public function __construct($storage_name)
     {
         $storage_obj = \OLOG\Storage\StorageFactory::getStorageObjByName($storage_name);
@@ -14,7 +16,7 @@ class ImageManager
 
         $this->setStorageName($storage_name);
     }
-    
+
     /**
      * @return string
      */
@@ -43,6 +45,18 @@ class ImageManager
         \OLOG\Assert::assert($storage_alias);
 
         return $storage_alias;
+    }
+
+    public static function getAvailableStorageNamesArr()
+    {
+        $storage_aliases_arr = \OLOG\ConfWrapper::getRequiredValue(ImageManagerConstants::MODULE_NAME . '.' . ImageManagerConfigKeys::STORAGE_ALIASES_ARR);
+
+        $storage_names_arr = [];
+        foreach ($storage_aliases_arr as $storage_alias => $storage_name) {
+            $storage_names_arr[$storage_name] = $storage_name;
+        }
+        
+        return $storage_names_arr;
     }
 
     public function output($image_preset_path_in_storage)
@@ -91,7 +105,7 @@ class ImageManager
         return $storage_obj->getFullFilePathOrUrlInStorage($image_path_in_storage);
     }
 
-    public function getImgUrlByPreset($image_path, $preset_name)
+    public function getImageUrlByPreset($image_path, $preset_name)
     {
         $storage_alias = self::getStorageAliasByStorageName($this->getStorageName());
         return ImageAction::getUrl($storage_alias, $preset_name . '/' . $image_path);
@@ -113,7 +127,7 @@ class ImageManager
 
         $this->saveImageToStorage($image_path_in_file_system, $image_path_in_storage, $preset_name);
     }
-    
+
     public function storeUploadedImage($source_image_file_name, $source_image_file_path, $force_jpeg_image_format = true)
     {
         $save_params_arr = array('quality' => 100);
@@ -125,7 +139,7 @@ class ImageManager
         $image_path_in_storage = self::generateNewImageFileNameAndPath($file_extension);
 
         $default_upload_preset = \OLOG\ConfWrapper::getRequiredValue(ImageManagerConstants::MODULE_NAME . '.' . ImageManagerConfigKeys::DEFAULT_UPLOAD_PRESET);
-        
+
         $this->saveImageToStorage($source_image_file_path, $image_path_in_storage, $default_upload_preset, $save_params_arr);
 
         return $image_path_in_storage;

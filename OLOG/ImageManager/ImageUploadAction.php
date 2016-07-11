@@ -58,7 +58,7 @@ class ImageUploadAction
             'success' => true,
             'storage_name' => $upload_storage_name,
             'file_path_in_storage' => $file_path_in_storage,
-            'image_url' => $image_manager_obj->getImgUrlByPreset($file_path_in_storage, \OLOG\ImageManager\ImagePresets::IMAGE_PRESET_UPLOAD)
+            'image_url' => $image_manager_obj->getImageUrlByPreset($file_path_in_storage, \OLOG\ImageManager\ImagePresets::IMAGE_PRESET_UPLOAD)
         );
 
         echo json_encode($return_arr);

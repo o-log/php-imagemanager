@@ -56,14 +56,16 @@ class ImageEditAction implements
             new \OLOG\ImageManager\CRUDFormWidgetImageUploader(
                 'file_path_in_storage',
                 'storage_name',
-                \OLOG\Storage\StorageFactory::getStorageNamesInConfigArr(), //@TODO storages from aliases
+                \OLOG\ImageManager\ImageManager::getAvailableStorageNamesArr(),
                 \OLOG\ImageManager\ImageUploadAction::getUrl()
             )
         );
 
+        $image_manager_obj = new \OLOG\ImageManager\ImageManager($image_obj->getStorageName());
+
         $form_fields_arr[] = new \OLOG\CRUD\CRUDFormRow(
             '',
-            new \OLOG\CRUD\CRUDFormWidgetHtml('<img src="' . \OLOG\Sanitize::sanitizeUrl($image_obj->getImageUrlByPreset(ImagePresets::IMAGE_PRESET_UPLOAD) . '" width="100%">'))
+            new \OLOG\CRUD\CRUDFormWidgetHtml('<img src="' . \OLOG\Sanitize::sanitizeUrl($image_manager_obj->getImageUrlByPreset($image_obj->getFilePathInStorage(), ImagePresets::IMAGE_PRESET_UPLOAD)) . '" width="100%">')
         );
 
         $html = \OLOG\CRUD\CRUDForm::html($image_obj, $form_fields_arr);

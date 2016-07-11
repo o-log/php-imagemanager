@@ -98,16 +98,4 @@ class Image implements
     {
         $this->created_at_ts = $timestamp;
     }
-
-    public function getImageUrlByPreset($preset_name)
-    {
-        $file_path_in_storage = $this->getFilePathInStorage();
-        //@TODO check or exeption?
-        if (!$file_path_in_storage) {
-            return '';
-        }
-        
-        $image_manager_obj = new ImageManager($this->getStorageName());
-        return $image_manager_obj->getImgUrlByPreset($file_path_in_storage, $preset_name);
-    }
 }
