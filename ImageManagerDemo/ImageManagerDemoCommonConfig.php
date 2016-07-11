@@ -21,6 +21,13 @@ class ImageManagerDemoCommonConfig
 
         $conf[\OLOG\Model\ModelConstants::MODULE_CONFIG_ROOT_KEY] = array(
             'db' => array(
+                \OLOG\Auth\Constants::DB_NAME_PHPAUTH => array(
+                    'host' => '127.0.0.1',
+                    'db_name' => 'db_phpimagemanagerdemo',
+                    'user' => 'root',
+                    'pass' => '1',
+                    'sql_file' => 'vendor/o-log/php-auth/db_phpauth.sql'
+                ),
                 \OLOG\ImageManager\ImageManagerConstants::DB_NAME_PHPIMAGEMANAGER => array(
                     'host' => '127.0.0.1',
                     'db_name' => 'db_phpimagemanagerdemo',

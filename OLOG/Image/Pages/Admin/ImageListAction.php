@@ -33,6 +33,8 @@ class ImageListAction implements
 
     public function action()
     {
+        \OLOG\Exits::exit403If(!\OLOG\Auth\Operator::currentOperatorHasAnyOfPermissions([\OLOG\ImageManager\Permissions::PERMISSION_PHPIMAGEMANAGER_MANAGE_IMAGES]));
+        
         $html = '';
         $html .= \OLOG\CRUD\CRUDTable::html(
             \OLOG\Image\Image::class,

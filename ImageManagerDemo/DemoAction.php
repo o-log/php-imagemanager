@@ -21,8 +21,8 @@ class DemoAction
 
     public function renderContent()
     {
-
-        $html = '<a href="' . \OLOG\Image\Pages\Admin\ImageListAction::getUrl() . '">Images admin</a>';
+        $html = '<h2><a href="'. \OLOG\Auth\Admin\AuthAdminAction::getUrl() .'">Auth admin</a></h2>';
+        $html .= '<h2><a href="' . \OLOG\Image\Pages\Admin\ImageListAction::getUrl() . '">Images admin</a><h2>';
 
         
         echo $html;

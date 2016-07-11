@@ -3,8 +3,6 @@
 
 namespace OLOG\Image;
 
-use OLOG\ImageManager\ImageManagerConfigKeys;
-use OLOG\ImageManager\ImageManagerConstants;
 
 class ImageAction
 {

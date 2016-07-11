@@ -79,10 +79,10 @@ class ImageManager
         return $storage_obj->getFullFilePathOrUrlInStorage($image_path_in_storage);
     }
 
-    public function getImageUrlByPreset($image_path, $preset_name)
+    public function getImageUrlByPreset($image_path_in_storage, $preset_name)
     {
         $storage_alias = \OLOG\ImageManager\ImageManagerConfigWrapper::getStorageAliasByStorageName($this->getStorageName());
-        return ImageAction::getUrl($storage_alias, $preset_name . '/' . $image_path);
+        return ImageAction::getUrl($storage_alias, $preset_name . '/' . $image_path_in_storage);
     }
 
     public static function generateNewImageFileNameAndPath($file_ext)

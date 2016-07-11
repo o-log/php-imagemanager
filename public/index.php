@@ -3,6 +3,7 @@ require_once '../vendor/autoload.php';
 
 \OLOG\ConfWrapper::assignConfig(\ImageManagerDemo\ImageManagerDemoConfig::get());
 
+\OLOG\Auth\RegisterRoutes::registerRoutes();
 \OLOG\Router::matchAction(\ImageManagerDemo\DemoAction::class, 0);
 
 \OLOG\ImageManager\ImageManagerRouting::register();

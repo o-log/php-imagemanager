@@ -39,6 +39,8 @@ class ImageEditAction implements
 
     public function action($image_id)
     {
+        \OLOG\Exits::exit403If(!\OLOG\Auth\Operator::currentOperatorHasAnyOfPermissions([\OLOG\ImageManager\Permissions::PERMISSION_PHPIMAGEMANAGER_MANAGE_IMAGES]));
+        
         $image_obj = \OLOG\Image\Image::factory($image_id, false);
         \OLOG\Exits::exit404If(!$image_obj);
 
@@ -61,17 +63,14 @@ class ImageEditAction implements
             )
         );
 
-        $storage_name = $image_obj->getStorageName();
-        $image_path_in_images = $image_obj->getFilePathInStorage();
-        if($storage_name && $image_path_in_images) {
-            $image_manager_obj = new \OLOG\ImageManager\ImageManager($image_obj->getStorageName());
-
+        try {
             $form_fields_arr[] = new \OLOG\CRUD\CRUDFormRow(
                 '',
-                new \OLOG\CRUD\CRUDFormWidgetHtml('<img src="' . \OLOG\Sanitize::sanitizeUrl($image_manager_obj->getImageUrlByPreset($image_obj->getFilePathInStorage(), ImagePresets::IMAGE_PRESET_UPLOAD)) . '" width="100%">')
+                new \OLOG\CRUD\CRUDFormWidgetHtml('<img src="' . \OLOG\Sanitize::sanitizeUrl($image_obj->getImageUrlByPreset(ImagePresets::IMAGE_PRESET_UPLOAD)) . '" width="100%">')
             );
+        } catch (\Exception $e) {
         }
-        
+
         $html = \OLOG\CRUD\CRUDForm::html($image_obj, $form_fields_arr);
 
         \OLOG\BT\Layout::render($html, $this);

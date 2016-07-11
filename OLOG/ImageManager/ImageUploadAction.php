@@ -13,6 +13,8 @@ class ImageUploadAction
 
     public function action()
     {
+        \OLOG\Exits::exit403If(!\OLOG\Auth\Operator::currentOperatorHasAnyOfPermissions([\OLOG\ImageManager\Permissions::PERMISSION_PHPIMAGEMANAGER_MANAGE_IMAGES]));
+        
         header('Content-Type: application/json; charset=utf-8');
         if (($_SERVER['REQUEST_METHOD'] != 'POST') || empty($_POST)) {
             echo json_encode(array('success' => false, 'error_message' => \OLOG\Sanitize::sanitizeTagContent('Ошибка метода запроса')));
