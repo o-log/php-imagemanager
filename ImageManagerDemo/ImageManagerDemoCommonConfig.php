@@ -12,12 +12,11 @@ use OLOG\Storage\StorageConfigKeys;
 class ImageManagerDemoCommonConfig
 {
     const STORAGE1_NAME = 'STORAGE1_NAME';
-    const STORAGE2_NAME = 'STORAGE2_NAME';
 
     public static function get()
     {
         date_default_timezone_set('Europe/Moscow');
-        
+
         $conf = [];
 
         $conf[\OLOG\Model\ModelConstants::MODULE_CONFIG_ROOT_KEY] = array(
@@ -37,14 +36,12 @@ class ImageManagerDemoCommonConfig
         $conf[StorageConfigKeys::ROOT] = array(
             StorageConfigKeys::STORAGES_ARR => array(
                 self::STORAGE1_NAME => new LocalStorage('/mnt/s1/'),
-                self::STORAGE2_NAME => new LocalStorage('/mnt/s2/'),
             ),
         );
 
         $conf[ImageManagerConstants::MODULE_NAME] = array(
             ImageManagerConfigKeys::STORAGE_ALIASES_ARR => [
-                's1' => self::STORAGE1_NAME,
-                's2' => self::STORAGE2_NAME
+                's1' => self::STORAGE1_NAME
             ],
             ImageManagerConfigKeys::DEFAULT_UPLOAD_PRESET => ImagePresets::IMAGE_PRESET_UPLOAD,
             ImageManagerConfigKeys::TEMP_DIR => '/tmp/'
