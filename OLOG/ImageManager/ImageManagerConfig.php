@@ -10,14 +10,12 @@ class ImageManagerConfig
     protected $default_upload_preset;
     protected $temp_dir;
     protected $image_presets_arr;
-    protected $image_presets_aliases_arr;
 
-    public function __construct($storages_aliases_arr, $default_upload_preset, $temp_dir, $image_presets_arr, $image_presets_aliases_arr)
+    public function __construct($storages_aliases_arr, $default_upload_preset, $temp_dir, $image_presets_arr)
     {
         $this->setDefaultUploadPreset($default_upload_preset);
         $this->setStoragesAliasesArr($storages_aliases_arr);
         $this->setTempDir($temp_dir);
-        $this->setImagePresetsAliasesArr($image_presets_aliases_arr);
         $this->setImagePresetsArr($image_presets_arr);
     }
     /**
@@ -69,7 +67,7 @@ class ImageManagerConfig
     }
 
     /**
-     * @return array
+     * @return ImageManagerPresetInterface[]
      */
     public function getImagePresetsArr()
     {
@@ -83,21 +81,4 @@ class ImageManagerConfig
     {
         $this->image_presets_arr = $image_presets_arr;
     }
-
-    /**
-     * @return array
-     */
-    public function getImagePresetsAliasesArr()
-    {
-        return $this->image_presets_aliases_arr;
-    }
-
-    /**
-     * @param array $image_presets_aliases_arr
-     */
-    public function setImagePresetsAliasesArr($image_presets_aliases_arr)
-    {
-        $this->image_presets_aliases_arr = $image_presets_aliases_arr;
-    }
-    
 }

@@ -4,7 +4,7 @@
 namespace OLOG\ImageManager;
 
 
-use OLOG\Image\ImageAction;
+use OLOG\ImageManager\ImageAction;
 
 class ImageManagerRouting
 {

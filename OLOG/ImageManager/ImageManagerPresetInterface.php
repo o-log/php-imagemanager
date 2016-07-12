@@ -10,5 +10,6 @@ interface ImageManagerPresetInterface
      * @param \Imagine\Image\ImageInterface $imageObject
      * @return \Imagine\Image\ImageInterface
      */
-    public static function processImageByPreset(\Imagine\Image\ImageInterface $imageObject);
+    public function processImage(\Imagine\Image\ImageInterface $imageObject);
+    public function getAlias();
 }

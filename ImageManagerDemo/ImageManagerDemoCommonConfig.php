@@ -56,17 +56,11 @@ class ImageManagerDemoCommonConfig
             self::IMAGE_PRESET_UPLOAD,
             '/tmp/',
             [
-                self::IMAGE_PRESET_320_240 => Presets\Preset320x240::class,
-                self::IMAGE_PRESET_UPLOAD => \OLOG\ImageManager\Presets\PresetUpload::class,
-                self::IMAGE_PRESET_640_360 => Presets\Preset640x360::class,
-                self::IMAGE_PRESET_300_AUTO => Presets\Preset300xAuto::class,
+                self::IMAGE_PRESET_320_240 => new Presets\Preset320x240('320_240'),
+                self::IMAGE_PRESET_UPLOAD => new \OLOG\ImageManager\Presets\PresetUpload('upload'),
+                self::IMAGE_PRESET_640_360 => new Presets\Preset640x360('640_360'),
+                self::IMAGE_PRESET_300_AUTO => new Presets\Preset300xAuto('300_auto'),
 
-            ],
-            [
-                '320_240' => self::IMAGE_PRESET_320_240,
-                'upload' => self::IMAGE_PRESET_UPLOAD,
-                '640_360' => self::IMAGE_PRESET_640_360,
-                '300_auto' => self::IMAGE_PRESET_300_AUTO
             ]
         );
 
