@@ -16,6 +16,8 @@ class ImageManagerDemoCommonConfig
 
     public static function get()
     {
+        date_default_timezone_set('Europe/Moscow');
+        
         $conf = [];
 
         $conf[\OLOG\Model\ModelConstants::MODULE_CONFIG_ROOT_KEY] = array(
