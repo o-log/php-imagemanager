@@ -105,7 +105,8 @@ class CRUDFormWidgetImageUploader implements InterfaceCRUDFormWidget
                            class="form-control"
                            readonly value="<?= Sanitize::sanitizeAttrValue($file_path_in_storage_field_value) ?>">
 
-                    <select name="upload_storage_name" class="form-control upload_storage_name_input" onchange="onChange(this)">
+                    <select name="upload_storage_name" class="form-control upload_storage_name_input"
+                            onchange="onChange(this)">
                         <option></option>
                         <?php
                         foreach ($this->getStoragesArr() as $storage_name => $storage_id) {
@@ -115,7 +116,8 @@ class CRUDFormWidgetImageUploader implements InterfaceCRUDFormWidget
                     </select>
 
                     <div class="input-group">
-                        <input name="upload_image_file" type="file" class="form-control upload_image_file_input" onchange="onChange(this)">
+                        <input name="upload_image_file" type="file" class="form-control upload_image_file_input"
+                               onchange="onChange(this)">
                         <span class="input-group-btn"><button class="btn btn-default upload_button" type="button"
                                                               onclick="processUpload(this,
                                                                   '<?= \OLOG\Sanitize::sanitizeUrl($this->getActionUrl()) ?>',
@@ -130,12 +132,10 @@ class CRUDFormWidgetImageUploader implements InterfaceCRUDFormWidget
                     </div>
                     <div class="uploaded_image">
                         <?php
-
-                        try {
+                        if ($storage_name_field_value && $file_path_in_storage_field_value) {
                             $image_manager_obj = new ImageManager($storage_name_field_value);
                             $image_manager_config_obj = \OLOG\ImageManager\ImageManagerConfigWrapper::getImageManagerConfigObj();
                             echo '<img src="' . \OLOG\Sanitize::sanitizeUrl($image_manager_obj->getImageUrlByPreset($file_path_in_storage_field_value, $image_manager_config_obj->getDefaultUploadPresetClassName())) . '" width="100%">';
-                        } catch (\Exception $e) {
                         }
                         ?>
                     </div>
@@ -144,91 +144,91 @@ class CRUDFormWidgetImageUploader implements InterfaceCRUDFormWidget
         </div>
 
         <?php if (!isset($CRUDFormWidgetImageUploader_include_script)) { ?>
-            <script type="text/javascript">
-                function onChange(input) {
-                    var disable_buttons = false;
-    
-                    var $upload_form = $(input).closest('.upload_form');
-                    var storage_name = $(".upload_storage_name_input", $upload_form).val();
-                    var file_name = $(".upload_image_file_input", $upload_form).val();
-    
-                    if ((storage_name == '') || (file_name == '')) {
-                        disable_buttons = true;
-                    }
-    
-                    var upload_button = $(".upload_button", $upload_form);
-                    upload_button.attr("disabled", disable_buttons);
+        <script type="text/javascript">
+            function onChange(input) {
+                var disable_buttons = false;
+
+                var $upload_form = $(input).closest('.upload_form');
+                var storage_name = $(".upload_storage_name_input", $upload_form).val();
+                var file_name = $(".upload_image_file_input", $upload_form).val();
+
+                if ((storage_name == '') || (file_name == '')) {
+                    disable_buttons = true;
                 }
-    
-                function processUpload(btn, upload_url, storage_name_input_name, file_path_in_storage_input_name) {
-                    var $upload_form = $(btn).closest('.upload_form');
-    
-                    var storage_name = $(".upload_storage_name_input", $upload_form).val();
-                    if ((typeof storage_name == "undefined") || (storage_name == '')) {
+
+                var upload_button = $(".upload_button", $upload_form);
+                upload_button.attr("disabled", disable_buttons);
+            }
+
+            function processUpload(btn, upload_url, storage_name_input_name, file_path_in_storage_input_name) {
+                var $upload_form = $(btn).closest('.upload_form');
+
+                var storage_name = $(".upload_storage_name_input", $upload_form).val();
+                if ((typeof storage_name == "undefined") || (storage_name == '')) {
+                    return;
+                }
+
+                var form_data = new FormData();
+                form_data.set("upload_storage_name", storage_name);
+                form_data.set("upload_image_file", $(".upload_image_file_input", $upload_form)[0].files[0]);
+
+                var upload_button = $(".upload_button", $upload_form);
+                upload_button.attr("disabled", true);
+
+                var file_input = $(".upload_image_file_input", $upload_form);
+                file_input.attr("disabled", true);
+
+                var upload_errors = $(".alert", $upload_form);
+                upload_errors.fadeOut();
+
+                var progress_bar = $(".progress-bar", $upload_form);
+                var progress_bar_div = $(".progress", $upload_form);
+                progress_bar_div.fadeIn();
+
+                $.ajax({
+                    type: "post",
+                    url: upload_url,
+                    data: form_data,
+                    processData: false,
+                    contentType: false,
+                    xhr: function () {
+                        var xhr = new window.XMLHttpRequest();
+
+                        xhr.upload.addEventListener("progress", function (evt) {
+                            if (evt.lengthComputable) {
+                                var percentage = Math.floor((evt.loaded / evt.total) * 100);
+                                progress_bar.width(percentage + "%").attr("aria-valuenow", percentage);
+                            }
+                        }, false);
+
+                        return xhr;
+                    }
+                }).done(function (data) {
+                    upload_button.attr("disabled", false);
+                    file_input.attr("disabled", false);
+                    progress_bar_div.fadeOut();
+
+                    if (!data.success) {
+                        upload_errors.html(data.error_message);
+                        upload_errors.fadeIn();
                         return;
                     }
-    
-                    var form_data = new FormData();
-                    form_data.set("upload_storage_name", storage_name);
-                    form_data.set("upload_image_file", $(".upload_image_file_input", $upload_form)[0].files[0]);
-    
-                    var upload_button = $(".upload_button", $upload_form);
-                    upload_button.attr("disabled", true);
-    
-                    var file_input = $(".upload_image_file_input", $upload_form);
-                    file_input.attr("disabled", true);
-    
-                    var upload_errors = $(".alert", $upload_form);
-                    upload_errors.fadeOut();
-    
-                    var progress_bar = $(".progress-bar", $upload_form);
-                    var progress_bar_div = $(".progress", $upload_form);
-                    progress_bar_div.fadeIn();
-    
-                    $.ajax({
-                        type: "post",
-                        url: upload_url,
-                        data: form_data,
-                        processData: false,
-                        contentType: false,
-                        xhr: function () {
-                            var xhr = new window.XMLHttpRequest();
-    
-                            xhr.upload.addEventListener("progress", function (evt) {
-                                if (evt.lengthComputable) {
-                                    var percentage = Math.floor((evt.loaded / evt.total) * 100);
-                                    progress_bar.width(percentage + "%").attr("aria-valuenow", percentage);
-                                }
-                            }, false);
-    
-                            return xhr;
-                        }
-                    }).done(function (data) {
-                        upload_button.attr("disabled", false);
-                        file_input.attr("disabled", false);
-                        progress_bar_div.fadeOut();
-    
-                        if (!data.success) {
-                            upload_errors.html(data.error_message);
-                            upload_errors.fadeIn();
-                            return;
-                        }
-    
-                        $("input[name=" + file_path_in_storage_input_name + "]", $upload_form).val(data.file_path_in_storage);
-                        $("input[name=" + storage_name_input_name + "]", $upload_form).val(data.storage_name);
-                        $(".uploaded_image", $upload_form).html('<img width="100%" src="' + data.image_url + '">');
-                    }).fail(function () {
-                        upload_button.attr("disabled", false);
-                        file_input.attr("disabled", false);
-                        progress_bar_div.fadeOut();
-    
-                        upload_errors.html('Ошибка сервера');
-                        upload_errors.fadeIn();
-                    });
-                }
-            </script>
-            <?php
-        }
+
+                    $("input[name=" + file_path_in_storage_input_name + "]", $upload_form).val(data.file_path_in_storage);
+                    $("input[name=" + storage_name_input_name + "]", $upload_form).val(data.storage_name);
+                    $(".uploaded_image", $upload_form).html('<img width="100%" src="' + data.image_url + '">');
+                }).fail(function () {
+                    upload_button.attr("disabled", false);
+                    file_input.attr("disabled", false);
+                    progress_bar_div.fadeOut();
+
+                    upload_errors.html('Ошибка сервера');
+                    upload_errors.fadeIn();
+                });
+            }
+        </script>
+        <?php
+    }
         $html = ob_get_clean();
         return $html;
     }
