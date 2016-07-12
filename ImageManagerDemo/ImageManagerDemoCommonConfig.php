@@ -64,8 +64,8 @@ class ImageManagerDemoCommonConfig
             ]
         );
 
-        $conf['php-bt'] = [
-            'layout_code' => \OLOG\BT\LayoutGentellela::LAYOUT_CODE_GENTELLELA,
+        $conf[\OLOG\BT\BTConstants::MODULE_NAME] = [
+            'layout_class_name' => \OLOG\Gentelella\Layout::class,
             'menu_classes_arr' => [
                 \ImageManagerDemo\ImageManagerDemoMenu::class
             ]

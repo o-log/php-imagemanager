@@ -28,7 +28,7 @@ class ImageListAction implements
 
     public static function breadcrumbsArr()
     {
-        return [\OLOG\BT::a(self::getUrl(), self::pageTitle())];
+        return [\OLOG\BT\BT::a(self::getUrl(), self::pageTitle())];
     }
 
     public function action()

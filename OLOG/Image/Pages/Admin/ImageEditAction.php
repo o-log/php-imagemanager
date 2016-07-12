@@ -32,7 +32,7 @@ class ImageEditAction implements
 
     public static function breadcrumbsArr($image_id)
     {
-        return array_merge(ImageListAction::breadcrumbsArr(), [\OLOG\BT::a(self::getUrl($image_id), self::pageTitle($image_id))]);
+        return array_merge(ImageListAction::breadcrumbsArr(), [\OLOG\BT\BT::a(self::getUrl($image_id), self::pageTitle($image_id))]);
     }
 
     public function action($image_id)

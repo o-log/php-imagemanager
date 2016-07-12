@@ -4,17 +4,22 @@
     {
       "type": "git",
       "url": "https://github.com/o-log/php-storage"
+    },
+    {
+      "type": "git",
+      "url": "https://github.com/o-log/php-gentelella"
     }
   ],
   "require": {
     "imagine/imagine": "~0.5.0",
     "o-log/php-lib" : "1.*",
     "o-log/php-router" : "1.*",
-    "o-log/php-bt" : "3.*",
+    "o-log/php-bt" : "4.*",
     "o-log/php-model" : "4.*",
     "o-log/php-crud" : "dev-master",
     "o-log/php-storage" : "dev-master",
-    "o-log/php-auth" : "dev-master"
+    "o-log/php-auth" : "dev-master",
+    "o-log/php-gentelella": "dev-master"
   },
   "autoload": {
     "psr-0": {
