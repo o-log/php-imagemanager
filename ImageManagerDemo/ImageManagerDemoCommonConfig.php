@@ -11,10 +11,15 @@ use OLOG\Storage\StorageConfigKeys;
 class ImageManagerDemoCommonConfig
 {
     const STORAGE1_NAME = 'STORAGE1_NAME';
-    const IMAGE_PRESET_320_240 = '320_240';
-    const IMAGE_PRESET_640_360 = 'upload';
-    const IMAGE_PRESET_300_AUTO = '640_360';
-    const IMAGE_PRESET_UPLOAD = '300_auto';
+    const IMAGE_PRESET_320_240 = 'IMAGE_PRESET_320_240';
+    const IMAGE_PRESET_640_360 = 'IMAGE_PRESET_640_360';
+    const IMAGE_PRESET_300_AUTO = 'IMAGE_PRESET_300_AUTO';
+    const IMAGE_PRESET_UPLOAD = 'IMAGE_PRESET_UPLOAD';
+
+    const IMAGE_PRESET_ALIAS_320_240 = '320_240';
+    const IMAGE_PRESET_ALIAS_640_360 = '640_360';
+    const IMAGE_PRESET_ALIAS_300_AUTO = '300_auto';
+    const IMAGE_PRESET_ALIAS_UPLOAD = 'upload';
 
     public static function get()
     {
@@ -56,10 +61,10 @@ class ImageManagerDemoCommonConfig
             self::IMAGE_PRESET_UPLOAD,
             '/tmp/',
             [
-                self::IMAGE_PRESET_320_240 => new Presets\Preset320x240(self::IMAGE_PRESET_320_240),
-                self::IMAGE_PRESET_UPLOAD => new \OLOG\ImageManager\Presets\PresetUpload(self::IMAGE_PRESET_UPLOAD),
-                self::IMAGE_PRESET_640_360 => new Presets\Preset640x360(self::IMAGE_PRESET_640_360),
-                self::IMAGE_PRESET_300_AUTO => new Presets\Preset300xAuto(self::IMAGE_PRESET_300_AUTO),
+                self::IMAGE_PRESET_320_240 => new Presets\Preset320x240(self::IMAGE_PRESET_ALIAS_320_240),
+                self::IMAGE_PRESET_UPLOAD => new \OLOG\ImageManager\Presets\PresetUpload(self::IMAGE_PRESET_ALIAS_UPLOAD),
+                self::IMAGE_PRESET_640_360 => new Presets\Preset640x360(self::IMAGE_PRESET_ALIAS_640_360),
+                self::IMAGE_PRESET_300_AUTO => new Presets\Preset300xAuto(self::IMAGE_PRESET_ALIAS_300_AUTO),
 
             ]
         );
