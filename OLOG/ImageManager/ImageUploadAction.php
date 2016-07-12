@@ -62,7 +62,7 @@ class ImageUploadAction
             'success' => true,
             'storage_name' => $upload_storage_name,
             'file_path_in_storage' => $file_path_in_storage,
-            'image_url' => $image_manager_obj->getImageUrlByPreset($file_path_in_storage, $image_manager_config_obj->getDefaultUploadPresetName())
+            'image_url' => $image_manager_obj->getImageUrlByPreset($file_path_in_storage, $image_manager_config_obj->getDefaultUploadPresetClassName())
         );
 
         echo json_encode($return_arr);

@@ -7,17 +7,18 @@ namespace OLOG\ImageManager;
 class ImageManagerConfig
 {
     protected $storages_aliases_arr;
-    protected $default_upload_preset_name;
+    protected $default_upload_preset_class_name;
     protected $temp_dir;
-    protected $image_presets_arr;
+    protected $image_presets_class_names_arr;
 
-    public function __construct($storages_aliases_arr, $default_upload_preset_name, $temp_dir, $image_presets_arr)
+    public function __construct($storages_aliases_arr, $default_upload_preset_class_name, $temp_dir, $image_presets_arr)
     {
-        $this->setDefaultUploadPresetName($default_upload_preset_name);
+        $this->setDefaultUploadPresetClassName($default_upload_preset_class_name);
         $this->setStoragesAliasesArr($storages_aliases_arr);
         $this->setTempDir($temp_dir);
-        $this->setImagePresetsArr($image_presets_arr);
+        $this->setImagePresetsClassnamesArr($image_presets_arr);
     }
+
     /**
      * @return array
      */
@@ -37,17 +38,17 @@ class ImageManagerConfig
     /**
      * @return string
      */
-    public function getDefaultUploadPresetName()
+    public function getDefaultUploadPresetClassName()
     {
-        return $this->default_upload_preset_name;
+        return $this->default_upload_preset_class_name;
     }
 
     /**
-     * @param string $default_upload_preset_name
+     * @param string $default_upload_preset_class_name
      */
-    public function setDefaultUploadPresetName($default_upload_preset_name)
+    public function setDefaultUploadPresetClassName($default_upload_preset_class_name)
     {
-        $this->default_upload_preset_name = $default_upload_preset_name;
+        $this->default_upload_preset_class_name = $default_upload_preset_class_name;
     }
 
     /**
@@ -69,16 +70,34 @@ class ImageManagerConfig
     /**
      * @return ImageManagerPresetInterface[]
      */
-    public function getImagePresetsArr()
+    public function getImagePresetsClassnamesArr()
     {
-        return $this->image_presets_arr;
+        return $this->image_presets_class_names_arr;
     }
 
     /**
-     * @param array $image_presets_arr
+     * @param ImageManagerPresetInterface[] $image_presets_class_names_arr
      */
-    public function setImagePresetsArr($image_presets_arr)
+    public function setImagePresetsClassnamesArr($image_presets_class_names_arr)
     {
-        $this->image_presets_arr = $image_presets_arr;
+        $parsed_preset_aliases_arr = [];
+        foreach ($image_presets_class_names_arr as $image_preset_class_name) {
+            \OLOG\CheckClassInterfaces::exceptionIfClassNotImplementsInterface($image_preset_class_name, ImageManagerPresetInterface::class);
+
+            /**
+             * @var $image_preset_obj ImageManagerPresetInterface
+             */
+            $image_preset_obj = new $image_preset_class_name;
+            $preset_alias = $image_preset_obj->getAlias();
+           
+            \OLOG\Assert::assert(
+                !in_array($preset_alias, $parsed_preset_aliases_arr),
+                'preset with alias ' . $preset_alias . ' alredy exists'
+            );
+
+            $parsed_preset_aliases_arr[] = $preset_alias;
+        }
+
+        $this->image_presets_class_names_arr = $image_presets_class_names_arr;
     }
 }

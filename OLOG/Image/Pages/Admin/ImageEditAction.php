@@ -60,17 +60,17 @@ class ImageEditAction implements
                 \OLOG\ImageManager\ImageUploadAction::getUrl()
             )
         );
-
+/*
         $image_manager_config_obj = \OLOG\ImageManager\ImageManagerConfigWrapper::getImageManagerConfigObj();
         
         try {
             $form_fields_arr[] = new \OLOG\CRUD\CRUDFormRow(
                 '',
-                new \OLOG\CRUD\CRUDFormWidgetHtml('<img src="' . \OLOG\Sanitize::sanitizeUrl($image_obj->getImageUrlByPreset($image_manager_config_obj->getDefaultUploadPresetName())) . '" width="100%">')
+                new \OLOG\CRUD\CRUDFormWidgetHtml('<img src="' . \OLOG\Sanitize::sanitizeUrl($image_obj->getImageUrlByPreset($image_manager_config_obj->getDefaultUploadPresetClassName())) . '" width="100%">')
             );
         } catch (\Exception $e) {
         }
-
+*/
         $html = \OLOG\CRUD\CRUDForm::html($image_obj, $form_fields_arr);
 
         \OLOG\BT\Layout::render($html, $this);

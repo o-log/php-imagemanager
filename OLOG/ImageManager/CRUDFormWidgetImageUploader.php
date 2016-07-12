@@ -129,7 +129,15 @@ class CRUDFormWidgetImageUploader implements InterfaceCRUDFormWidget
                              aria-valuemax="100" style="width: 0;"></div>
                     </div>
                     <div class="uploaded_image">
-                        <?php //@TODO existing image? ?>
+                        <?php
+
+                        try {
+                            $image_manager_obj = new ImageManager($storage_name_field_value);
+                            $image_manager_config_obj = \OLOG\ImageManager\ImageManagerConfigWrapper::getImageManagerConfigObj();
+                            echo '<img src="' . \OLOG\Sanitize::sanitizeUrl($image_manager_obj->getImageUrlByPreset($file_path_in_storage_field_value, $image_manager_config_obj->getDefaultUploadPresetClassName())) . '" width="100%">';
+                        } catch (\Exception $e) {
+                        }
+                        ?>
                     </div>
                 </div>
             </div>

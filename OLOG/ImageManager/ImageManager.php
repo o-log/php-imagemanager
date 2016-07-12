@@ -31,14 +31,14 @@ class ImageManager
         $this->storage_name = $storage_name;
     }
 
-    public function output($image_path_in_storage, $preset_name)
+    public function output($image_path_in_storage, $preset_class_name)
     {
-        $fullpath = $this->getImagePathInFileSystemByPreset($image_path_in_storage, $preset_name);
+        $fullpath = $this->getImagePathInFileSystemByPreset($image_path_in_storage, $preset_class_name);
 
         if (!file_exists($fullpath)) {
             $image_path_in_file_system = $this->getImagePathInFileSystem($image_path_in_storage);
             \OLOG\Exits::exit404If(!file_exists($image_path_in_file_system));
-            $this->moveImageByPreset($image_path_in_storage, $preset_name);
+            $this->moveImageByPreset($image_path_in_storage, $preset_class_name);
         }
         $ext = pathinfo($fullpath, PATHINFO_EXTENSION);
 
@@ -49,10 +49,11 @@ class ImageManager
         exit;
     }
     
-    public function getImagePathInFileSystemByPreset($image_path_in_storage, $preset_name)
+    public function getImagePathInFileSystemByPreset($image_path_in_storage, $preset_class_name)
     {
+        $preset_alias = self::getPresetAliasByClassName($preset_class_name);
         $storage_obj = \OLOG\Storage\StorageFactory::getStorageObjByName($this->getStorageName());
-        return $storage_obj->getFullFilePathOrUrlInStorage($preset_name . DIRECTORY_SEPARATOR . $image_path_in_storage);
+        return $storage_obj->getFullFilePathOrUrlInStorage($preset_alias . DIRECTORY_SEPARATOR . $image_path_in_storage);
     }
 
     public function getImagePathInFileSystem($image_path_in_storage)
@@ -61,10 +62,10 @@ class ImageManager
         return $storage_obj->getFullFilePathOrUrlInStorage($image_path_in_storage);
     }
 
-    public function getImageUrlByPreset($image_path_in_storage, $preset_name)
+    public function getImageUrlByPreset($image_path_in_storage, $preset_class_name)
     {
-        $preset_alias = \OLOG\ImageManager\ImageManager::getPresetAliasByName($preset_name);
-        $storage_alias = \OLOG\ImageManager\ImageManagerConfigWrapper::getStorageAliasByStorageName($this->getStorageName());
+        $preset_alias = self::getPresetAliasByClassName($preset_class_name);
+        $storage_alias = ImageManagerConfigWrapper::getStorageAliasByStorageName($this->getStorageName());
         return ImageAction::getUrl($storage_alias, $preset_alias, $image_path_in_storage);
     }
 
@@ -77,12 +78,13 @@ class ImageManager
         return $full_folders_path . DIRECTORY_SEPARATOR . $md5_filename . '.' . $file_ext;
     }
 
-    public function moveImageByPreset($image_path_in_storage, $preset_name)
+    public function moveImageByPreset($image_path_in_storage, $preset_class_name)
     {
+        $preset_alias = self::getPresetAliasByClassName($preset_class_name);
         $image_path_in_file_system = $this->getImagePathInFileSystem($image_path_in_storage);
-        $image_path_in_storage = $preset_name . DIRECTORY_SEPARATOR . $image_path_in_storage;
+        $image_path_in_storage = $preset_alias . DIRECTORY_SEPARATOR . $image_path_in_storage;
 
-        $this->saveImageToStorage($image_path_in_file_system, $image_path_in_storage, $preset_name);
+        $this->saveImageToStorage($image_path_in_file_system, $image_path_in_storage, $preset_class_name);
     }
 
     public function storeUploadedImage($source_image_file_name, $source_image_file_path, $force_jpeg_image_format = true)
@@ -95,23 +97,28 @@ class ImageManager
         }
         $image_path_in_storage = self::generateNewImageFileNameAndPath($file_extension);
 
-        $image_manager_config_obj = \OLOG\ImageManager\ImageManagerConfigWrapper::getImageManagerConfigObj();
-        $default_upload_preset = $image_manager_config_obj->getDefaultUploadPresetName();
+        $image_manager_config_obj = ImageManagerConfigWrapper::getImageManagerConfigObj();
+        $default_upload_preset_class_name = $image_manager_config_obj->getDefaultUploadPresetClassName();
 
-        $this->saveImageToStorage($source_image_file_path, $image_path_in_storage, $default_upload_preset, $save_params_arr);
+        $this->saveImageToStorage($source_image_file_path, $image_path_in_storage, $default_upload_preset_class_name, $save_params_arr);
 
         return $image_path_in_storage;
     }
 
-    protected function saveImageToStorage($source_image_path_in_file_system, $destiantion_image_file_path_in_storage, $preset_name, $save_params_arr = ['quality' => 100])
+    protected function saveImageToStorage($source_image_path_in_file_system, $destiantion_image_file_path_in_storage, $preset_class_name, $save_params_arr = ['quality' => 100])
     {
-        $image_manager_config_obj = \OLOG\ImageManager\ImageManagerConfigWrapper::getImageManagerConfigObj();
+        $image_manager_config_obj = ImageManagerConfigWrapper::getImageManagerConfigObj();
         $tmp_dir = $image_manager_config_obj->getTempDir();
 
         $imagine_obj = new \Imagine\Gd\Imagine();
         $image = $imagine_obj->open($source_image_path_in_file_system);
 
-        $image_preset_obj = self::getImagePresetObjByPresetName($preset_name);
+        /**
+         * @var $image_preset_obj ImageManagerPresetInterface
+         */
+        $image_preset_obj = new $preset_class_name;
+        \OLOG\Assert::assert($image_preset_obj instanceof ImageManagerPresetInterface);
+
         $image = $image_preset_obj->processImage($image);
 
         $file_extension = pathinfo($destiantion_image_file_path_in_storage, PATHINFO_EXTENSION);
@@ -130,39 +137,25 @@ class ImageManager
     }
 
     /**
-     * @param $preset_name
-     * @return ImageManagerPresetInterface
-     * @throws \Exception
-     */
-    protected static function getImagePresetObjByPresetName($preset_name)
-    {
-        $image_manager_config_obj = \OLOG\ImageManager\ImageManagerConfigWrapper::getImageManagerConfigObj();
-        $image_presets_arr = $image_manager_config_obj->getImagePresetsArr();
-
-        \OLOG\Assert::assert(array_key_exists($preset_name, $image_presets_arr));
-
-        $image_preset_obj = $image_presets_arr[$preset_name];
-
-        \OLOG\CheckClassInterfaces::exceptionIfClassNotImplementsInterface($image_preset_obj, ImageManagerPresetInterface::class);
-
-        return $image_preset_obj;
-    }
-
-    /**
      * @param $preset_alias
      * @return string
      * @throws \Exception
      */
-    public static function getPresetNameByAlias($preset_alias)
+    public static function getPresetClassNameByAlias($preset_alias)
     {
-        $image_manager_config_obj = \OLOG\ImageManager\ImageManagerConfigWrapper::getImageManagerConfigObj();
-        $image_presets_arr = $image_manager_config_obj->getImagePresetsArr();
+        $image_manager_config_obj = ImageManagerConfigWrapper::getImageManagerConfigObj();
+        $image_presets_class_names_arr = $image_manager_config_obj->getImagePresetsClassnamesArr();
 
-        foreach ($image_presets_arr as $image_preset_name => $image_preset_obj) {
-            \OLOG\Assert::assert($image_preset_obj instanceof ImageManagerPresetInterface);
+        foreach ($image_presets_class_names_arr as $image_preset_class_name) {
+            \OLOG\CheckClassInterfaces::exceptionIfClassNotImplementsInterface($image_preset_class_name, ImageManagerPresetInterface::class);
 
+            /**
+             * @var $image_preset_obj ImageManagerPresetInterface
+             */
+            $image_preset_obj = new $image_preset_class_name;
+            
             if ($preset_alias == $image_preset_obj->getAlias()) {
-                return $image_preset_name;
+                return $image_preset_class_name;
             }
         }
 
@@ -170,18 +163,16 @@ class ImageManager
     }
 
     /**
-     * @param $preset_name
+     * @param $preset_class_name
      * @return string
      * @throws \Exception
      */
-    protected static function getPresetAliasByName($preset_name)
+    protected static function getPresetAliasByClassName($preset_class_name)
     {
-        $image_manager_config_obj = \OLOG\ImageManager\ImageManagerConfigWrapper::getImageManagerConfigObj();
-        $image_presets_arr = $image_manager_config_obj->getImagePresetsArr();
-        
-        \OLOG\Assert::assert(array_key_exists($preset_name, $image_presets_arr));
-        $image_preset_obj = $image_presets_arr[$preset_name];
-
+        /**
+         * @var $image_preset_obj ImageManagerPresetInterface
+         */
+        $image_preset_obj = new $preset_class_name;
         \OLOG\Assert::assert($image_preset_obj instanceof ImageManagerPresetInterface);
 
         return $image_preset_obj->getAlias();

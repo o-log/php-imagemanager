@@ -13,7 +13,7 @@ class ImageAction
 
     public function action($storage_alias, $preset_alias, $image_path_in_storage)
     {
-        $image_manager_config_obj = \OLOG\ImageManager\ImageManagerConfigWrapper::getImageManagerConfigObj();
+        $image_manager_config_obj = ImageManagerConfigWrapper::getImageManagerConfigObj();
         
         $storage_aliases_arr = $image_manager_config_obj->getStoragesAliasesArr();
         
@@ -21,11 +21,11 @@ class ImageAction
         
         $storage_name = $storage_aliases_arr[$storage_alias];
 
-        $preset_name = ImageManager::getPresetNameByAlias($preset_alias);
-        \OLOG\Exits::exit404If(!$preset_name);
+        $preset_class_name = ImageManager::getPresetClassNameByAlias($preset_alias);
+        \OLOG\Exits::exit404If(!$preset_class_name);
 
-        $image_manager_obj = new \OLOG\ImageManager\ImageManager($storage_name);
+        $image_manager_obj = new ImageManager($storage_name);
         
-        $image_manager_obj->output($image_path_in_storage, $preset_name);
+        $image_manager_obj->output($image_path_in_storage, $preset_class_name);
     }
 }
