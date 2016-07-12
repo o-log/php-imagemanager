@@ -48,21 +48,7 @@ class ImageManager
         fpassthru($fp);
         exit;
     }
-
-    public function acquirePresetNameAndImageNameFromUrl($requested_file_path)
-    {
-        if (mb_substr($requested_file_path, 0, 1) == '/') {
-            $requested_file_path = mb_substr($requested_file_path, 1);
-        }
-
-        $file_path_parts_arr = explode('/', $requested_file_path);
-
-        $preset_name = array_shift($file_path_parts_arr);
-        $file_path_relative = implode('/', $file_path_parts_arr);
-
-        return array($file_path_relative, $preset_name);
-    }
-
+    
     public function getImagePathInFileSystemByPreset($image_path_in_storage, $preset_name)
     {
         $storage_obj = \OLOG\Storage\StorageFactory::getStorageObjByName($this->getStorageName());
