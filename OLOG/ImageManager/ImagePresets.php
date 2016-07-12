@@ -2,6 +2,9 @@
 
 namespace OLOG\ImageManager;
 
+/**
+ * @deprecated 
+ */
 class ImagePresets
 {
     const IMAGE_PRESET_604_331 = '604_331';
@@ -123,7 +126,7 @@ class ImagePresets
     const IMAGE_PRESET_imagecache_3000_2000 = '3000_2000';
     const IMAGE_PRESET_imagecache_plain = 'plain';
     const IMAGE_PRESET_UPLOAD = 'upload';
-
+    
     public static function processImageByPreset(\Imagine\Image\ImageInterface $imageObject, $presetName)
     {
         switch ($presetName) {

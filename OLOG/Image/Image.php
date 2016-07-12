@@ -103,7 +103,7 @@ class Image implements
     public function getImageUrlByPreset($preset_name)
     {
         $file_path_in_storage = $this->getFilePathInStorage();
-        $storage_name = $this->getFilePathInStorage();
+        $storage_name = $this->getStorageName();
         
         \OLOG\Assert::assert($file_path_in_storage);
         \OLOG\Assert::assert($storage_name);

@@ -6,13 +6,13 @@ namespace OLOG\Image;
 
 class ImageAction
 {
-    static public function getUrl($storage_alias = '([^/]*)', $image_path = '(.*)')
+    static public function getUrl($storage_alias = '([^/]*)', $image_preset_path_in_storage = '(.*)')
     {
-        return "/imagemanager/" . $storage_alias . '/' . $image_path;
+        return "/imagemanager/" . $storage_alias . '/' . $image_preset_path_in_storage;
     }
 
 
-    public function action($storage_alias, $image_path)
+    public function action($storage_alias, $image_preset_path_in_storage)
     {
         $image_manager_config_obj = \OLOG\ImageManager\ImageManagerConfigWrapper::getImageManagerConfigObj();
         
@@ -24,6 +24,6 @@ class ImageAction
         
         $image_manager_obj = new \OLOG\ImageManager\ImageManager($storage_name);
         
-        $image_manager_obj->output($image_path);
+        $image_manager_obj->output($image_preset_path_in_storage);
     }
 }

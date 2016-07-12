@@ -4,8 +4,6 @@
 namespace OLOG\Image\Pages\Admin;
 
 
-use OLOG\ImageManager\ImagePresets;
-
 class ImageEditAction implements
     \OLOG\BT\InterfaceBreadcrumbs,
     \OLOG\BT\InterfacePageTitle
@@ -63,10 +61,12 @@ class ImageEditAction implements
             )
         );
 
+        $image_manager_config_obj = \OLOG\ImageManager\ImageManagerConfigWrapper::getImageManagerConfigObj();
+        
         try {
             $form_fields_arr[] = new \OLOG\CRUD\CRUDFormRow(
                 '',
-                new \OLOG\CRUD\CRUDFormWidgetHtml('<img src="' . \OLOG\Sanitize::sanitizeUrl($image_obj->getImageUrlByPreset(ImagePresets::IMAGE_PRESET_UPLOAD)) . '" width="100%">')
+                new \OLOG\CRUD\CRUDFormWidgetHtml('<img src="' . \OLOG\Sanitize::sanitizeUrl($image_obj->getImageUrlByPreset($image_manager_config_obj->getDefaultUploadPreset())) . '" width="100%">')
             );
         } catch (\Exception $e) {
         }
