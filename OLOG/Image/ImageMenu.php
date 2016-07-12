@@ -1,11 +1,11 @@
 <?php
 
 
-namespace ImageManagerDemo;
+namespace OLOG\Image;
 
 use OLOG\BT\MenuItem;
 
-class ImageManagerDemoMenu implements \OLOG\BT\InterfaceMenu
+class ImageMenu implements \OLOG\BT\InterfaceMenu
 {
     static public function menuArr()
     {

@@ -63,7 +63,7 @@ class ImageManagerDemoCommonConfig
         $conf[\OLOG\BT\BTConstants::MODULE_NAME] = [
             'layout_class_name' => \OLOG\Gentelella\Layout::class,
             'menu_classes_arr' => [
-                \ImageManagerDemo\ImageManagerDemoMenu::class
+                \OLOG\Image\ImageMenu::class
             ]
         ];
         return $conf;
