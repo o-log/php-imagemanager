@@ -96,7 +96,7 @@ class ImageManager
         $image_path_in_storage = self::generateNewImageFileNameAndPath($file_extension);
 
         $image_manager_config_obj = \OLOG\ImageManager\ImageManagerConfigWrapper::getImageManagerConfigObj();
-        $default_upload_preset = $image_manager_config_obj->getDefaultUploadPreset();
+        $default_upload_preset = $image_manager_config_obj->getDefaultUploadPresetName();
 
         $this->saveImageToStorage($source_image_file_path, $image_path_in_storage, $default_upload_preset, $save_params_arr);
 
