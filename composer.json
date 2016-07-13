@@ -18,8 +18,7 @@
     "o-log/php-model" : "4.*",
     "o-log/php-crud" : "dev-master",
     "o-log/php-storage" : "dev-master",
-    "o-log/php-auth" : "dev-master",
-    "o-log/php-gentelella": "dev-master"
+    "o-log/php-auth" : "dev-master"
   },
   "autoload": {
     "psr-0": {

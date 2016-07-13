@@ -100,7 +100,7 @@ class Image implements
         $this->created_at_ts = $timestamp;
     }
 
-    public function getImageUrlByPreset($preset_name)
+    public function getImageUrlByPreset($preset_class_name)
     {
         $file_path_in_storage = $this->getFilePathInStorage();
         $storage_name = $this->getStorageName();
@@ -109,6 +109,6 @@ class Image implements
         \OLOG\Assert::assert($storage_name);
         
         $image_manager_obj = new ImageManager($storage_name);
-        return $image_manager_obj->getImageUrlByPreset($file_path_in_storage, $preset_name);
+        return $image_manager_obj->getImageUrlByPreset($file_path_in_storage, $preset_class_name);
     }
 }
