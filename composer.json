@@ -16,9 +16,9 @@
     "o-log/php-router" : "1.*",
     "o-log/php-bt" : "4.*",
     "o-log/php-model" : "4.*",
-    "o-log/php-crud" : "dev-master",
+    "o-log/php-crud" : "0.5",
     "o-log/php-storage" : "dev-master",
-    "o-log/php-auth" : "dev-master"
+    "o-log/php-auth" : "0.3"
   },
   "autoload": {
     "psr-0": {
