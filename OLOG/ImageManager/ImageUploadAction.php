@@ -56,13 +56,14 @@ class ImageUploadAction
         $image_manager_obj = new ImageManager($upload_storage_name);
         $file_path_in_storage = $image_manager_obj->storeUploadedImage($upload_image_file_arr['name'], $tmp_file_path);
 
-        $image_manager_config_obj = \OLOG\ImageManager\ImageManagerConfigWrapper::getImageManagerConfigObj();
+        //$image_manager_config_obj = \OLOG\ImageManager\ImageManagerConfigWrapper::getImageManagerConfigObj();
 
         $return_arr = array(
             'success' => true,
             'storage_name' => $upload_storage_name,
             'file_path_in_storage' => $file_path_in_storage,
-            'image_url' => $image_manager_obj->getImageUrlByPreset($file_path_in_storage, $image_manager_config_obj->getDefaultUploadPresetClassName())
+            //'image_url' => $image_manager_obj->getImageUrlByPreset($file_path_in_storage, $image_manager_config_obj->getDefaultUploadPresetClassName())
+            'image_url' => $image_manager_obj->getImageUrlByPreset($file_path_in_storage, ImageManagerConfig::getDefaultUploadPresetClassName())
         );
 
         echo json_encode($return_arr);

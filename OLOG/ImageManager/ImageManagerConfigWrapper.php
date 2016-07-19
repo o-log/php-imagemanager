@@ -10,6 +10,8 @@ class ImageManagerConfigWrapper
      * @return ImageManagerConfig
      * @throws \Exception
      */
+
+    /*
     public static function getImageManagerConfigObj()
     {
         $image_manager_config_obj = \OLOG\ConfWrapper::getRequiredValue(ImageManagerConstants::MODULE_NAME);
@@ -18,6 +20,8 @@ class ImageManagerConfigWrapper
 
         return $image_manager_config_obj;
     }
+    */
+
 
     /**
      * @return string
@@ -25,8 +29,9 @@ class ImageManagerConfigWrapper
      */
     public static function getStorageAliasByStorageName($storage_name)
     {
-        $image_manager_config_obj = \OLOG\ImageManager\ImageManagerConfigWrapper::getImageManagerConfigObj();
-        $storage_aliases_arr = $image_manager_config_obj->getStoragesAliasesArr();
+        //$image_manager_config_obj = \OLOG\ImageManager\ImageManagerConfigWrapper::getImageManagerConfigObj();
+        //$storage_aliases_arr = $image_manager_config_obj->getStoragesAliasesArr();
+        $storage_aliases_arr = ImageManagerConfig::getStoragesAliasesArr();
 
         $storage_alias = array_search($storage_name, $storage_aliases_arr);
         \OLOG\Assert::assert($storage_alias);
@@ -39,8 +44,9 @@ class ImageManagerConfigWrapper
      */
     public static function getAvailableStorageNamesArr()
     {
-        $image_manager_config_obj = \OLOG\ImageManager\ImageManagerConfigWrapper::getImageManagerConfigObj();
-        $storage_aliases_arr = $image_manager_config_obj->getStoragesAliasesArr();
+        //$image_manager_config_obj = \OLOG\ImageManager\ImageManagerConfigWrapper::getImageManagerConfigObj();
+        //$storage_aliases_arr = $image_manager_config_obj->getStoragesAliasesArr();
+        $storage_aliases_arr = ImageManagerConfig::getStoragesAliasesArr();
 
         $storage_names_arr = [];
         foreach ($storage_aliases_arr as $storage_alias => $storage_name) {

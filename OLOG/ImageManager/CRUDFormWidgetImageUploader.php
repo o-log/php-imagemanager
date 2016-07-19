@@ -134,8 +134,9 @@ class CRUDFormWidgetImageUploader implements InterfaceCRUDFormWidget
                         <?php
                         if ($storage_name_field_value && $file_path_in_storage_field_value) {
                             $image_manager_obj = new ImageManager($storage_name_field_value);
-                            $image_manager_config_obj = \OLOG\ImageManager\ImageManagerConfigWrapper::getImageManagerConfigObj();
-                            echo '<img src="' . \OLOG\Sanitize::sanitizeUrl($image_manager_obj->getImageUrlByPreset($file_path_in_storage_field_value, $image_manager_config_obj->getDefaultUploadPresetClassName())) . '" width="100%">';
+                            //$image_manager_config_obj = \OLOG\ImageManager\ImageManagerConfigWrapper::getImageManagerConfigObj();
+                            //echo '<img src="' . \OLOG\Sanitize::sanitizeUrl($image_manager_obj->getImageUrlByPreset($file_path_in_storage_field_value, $image_manager_config_obj->getDefaultUploadPresetClassName())) . '" width="100%">';
+                            echo '<img src="' . \OLOG\Sanitize::sanitizeUrl($image_manager_obj->getImageUrlByPreset($file_path_in_storage_field_value, ImageManagerConfig::getDefaultUploadPresetClassName())) . '" width="100%">';
                         }
                         ?>
                     </div>

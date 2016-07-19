@@ -1,24 +1,14 @@
 {
   "name": "o-log/php-imagemanager",
-  "repositories" : [
-    {
-      "type": "git",
-      "url": "https://github.com/o-log/php-storage"
-    },
-    {
-      "type": "git",
-      "url": "https://github.com/o-log/php-gentelella"
-    }
-  ],
   "require": {
     "imagine/imagine": "~0.5.0",
     "o-log/php-lib" : "1.*",
     "o-log/php-router" : "1.*",
-    "o-log/php-bt" : "4.*",
-    "o-log/php-model" : "4.*",
-    "o-log/php-crud" : "0.5",
-    "o-log/php-storage" : "dev-master",
-    "o-log/php-auth" : "0.3"
+    "o-log/php-bt" : "5.*",
+    "o-log/php-model" : "5.*",
+    "o-log/php-crud" : "1.*",
+    "o-log/php-storage" : "1.*",
+    "o-log/php-auth" : "1.*"
   },
   "autoload": {
     "psr-0": {

@@ -97,8 +97,9 @@ class ImageManager
         }
         $image_path_in_storage = self::generateNewImageFileNameAndPath($file_extension);
 
-        $image_manager_config_obj = ImageManagerConfigWrapper::getImageManagerConfigObj();
-        $default_upload_preset_class_name = $image_manager_config_obj->getDefaultUploadPresetClassName();
+        //$image_manager_config_obj = ImageManagerConfigWrapper::getImageManagerConfigObj();
+        //$default_upload_preset_class_name = $image_manager_config_obj->getDefaultUploadPresetClassName();
+        $default_upload_preset_class_name = ImageManagerConfig::getDefaultUploadPresetClassName();
 
         $this->saveImageToStorage($source_image_file_path, $image_path_in_storage, $default_upload_preset_class_name, $save_params_arr);
 
@@ -107,8 +108,9 @@ class ImageManager
 
     protected function saveImageToStorage($source_image_path_in_file_system, $destiantion_image_file_path_in_storage, $preset_class_name, $save_params_arr = ['quality' => 100])
     {
-        $image_manager_config_obj = ImageManagerConfigWrapper::getImageManagerConfigObj();
-        $tmp_dir = $image_manager_config_obj->getTempDir();
+        //$image_manager_config_obj = ImageManagerConfigWrapper::getImageManagerConfigObj();
+        //$tmp_dir = $image_manager_config_obj->getTempDir();
+        $tmp_dir = ImageManagerConfig::getTempDir();
 
         $imagine_obj = new \Imagine\Gd\Imagine();
         $image = $imagine_obj->open($source_image_path_in_file_system);
@@ -143,8 +145,9 @@ class ImageManager
      */
     public static function getPresetClassNameByAlias($preset_alias)
     {
-        $image_manager_config_obj = ImageManagerConfigWrapper::getImageManagerConfigObj();
-        $image_presets_class_names_arr = $image_manager_config_obj->getImagePresetsClassnamesArr();
+        //$image_manager_config_obj = ImageManagerConfigWrapper::getImageManagerConfigObj();
+        //$image_presets_class_names_arr = $image_manager_config_obj->getImagePresetsClassnamesArr();
+        $image_presets_class_names_arr = ImageManagerConfig::getImagePresetsClassnamesArr();
 
         foreach ($image_presets_class_names_arr as $image_preset_class_name) {
             \OLOG\CheckClassInterfaces::exceptionIfClassNotImplementsInterface($image_preset_class_name, ImageManagerPresetInterface::class);

@@ -1,6 +1,6 @@
 <?php
 require_once 'vendor/autoload.php';
 
-\OLOG\ConfWrapper::assignConfig(\ImageManagerDemo\ImageManagerDemoCommonConfig::get());
+\ImageManagerDemo\ImageManagerDemoCommonConfig::init();
 
 \OLOG\Model\CLI\CLIMenu::run();
