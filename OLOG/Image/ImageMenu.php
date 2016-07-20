@@ -10,7 +10,7 @@ class ImageMenu implements \OLOG\BT\InterfaceMenu
     static public function menuArr()
     {
         return [
-            new MenuItem('Images', \OLOG\Image\Pages\Admin\ImageListAction::getUrl())
+            new MenuItem('Images', \OLOG\Image\Pages\Admin\ImageListAction::getUrl(), null, 'glyphicon glyphicon-picture')
         ];
     }
 

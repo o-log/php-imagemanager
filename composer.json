@@ -1,5 +1,11 @@
 {
   "name": "o-log/php-imagemanager",
+  "repositories": [
+    {
+      "type": "git",
+      "url": "https://github.com/o-log/php-storage"
+    }
+  ],
   "require": {
     "imagine/imagine": "~0.5.0",
     "o-log/php-lib" : "1.*",
