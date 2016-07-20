@@ -102,12 +102,21 @@ class Image implements
 
     public function getImageUrlByPreset($preset_class_name)
     {
-        $file_path_in_storage = $this->getFilePathInStorage();
         $storage_name = $this->getStorageName();
-        
+        if (!$storage_name) {
+            return '';
+        }
+
+        $file_path_in_storage = $this->getFilePathInStorage();
+        if (!$file_path_in_storage) {
+            return '';
+        }
+
+        /*
         \OLOG\Assert::assert($file_path_in_storage);
         \OLOG\Assert::assert($storage_name);
-        
+        */
+
         $image_manager_obj = new ImageManager($storage_name);
         return $image_manager_obj->getImageUrlByPreset($file_path_in_storage, $preset_class_name);
     }
