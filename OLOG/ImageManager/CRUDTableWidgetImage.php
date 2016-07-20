@@ -17,11 +17,10 @@ class CRUDTableWidgetImage implements InterfaceCRUDTableWidget
 
         $image_obj = \OLOG\Image\Image::factory($image_id, false);
         $html = '';
-        if ($image_obj) {
+        if ($image_obj && $image_obj->getFilePathInStorage() && $image_obj->getStorageName()) {
             $html = '<img src=' . \OLOG\Sanitize::sanitizeUrl($image_obj->getImageUrlByPreset($this->getImagePresetClassName())) . '>';
         }
-
-
+        
         return $html;
     }
 
