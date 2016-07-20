@@ -4,8 +4,11 @@ namespace OLOG\Image\Pages\Admin;
 
 class ImageListAction implements
     \OLOG\BT\InterfaceBreadcrumbs,
-    \OLOG\BT\InterfacePageTitle
+    \OLOG\BT\InterfacePageTitle,
+    \OLOG\BT\InterfaceUserName
 {
+    use \OLOG\Auth\Admin\CurrentUserNameTrait;
+
     static public function getUrl()
     {
         return '/admin/images';

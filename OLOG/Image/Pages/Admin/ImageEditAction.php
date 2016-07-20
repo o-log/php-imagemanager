@@ -6,8 +6,11 @@ namespace OLOG\Image\Pages\Admin;
 
 class ImageEditAction implements
     \OLOG\BT\InterfaceBreadcrumbs,
-    \OLOG\BT\InterfacePageTitle
+    \OLOG\BT\InterfacePageTitle,
+    \OLOG\BT\InterfaceUserName
 {
+    use \OLOG\Auth\Admin\CurrentUserNameTrait;
+
     protected $image_id;
 
     static public function getUrl($image_id = '(\d+)')
