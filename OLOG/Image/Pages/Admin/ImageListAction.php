@@ -37,7 +37,7 @@ class ImageListAction implements
     public function action()
     {
         \OLOG\Exits::exit403If(!\OLOG\Auth\Operator::currentOperatorHasAnyOfPermissions([\OLOG\ImageManager\Permissions::PERMISSION_PHPIMAGEMANAGER_MANAGE_IMAGES]));
-        
+
         $html = '';
         $html .= \OLOG\CRUD\CRUDTable::html(
             \OLOG\Image\Image::class,
@@ -64,6 +64,7 @@ class ImageListAction implements
                 new \OLOG\CRUD\CRUDTableColumn('Название', new \OLOG\CRUD\CRUDTableWidgetText('{this->title}')),
                 new \OLOG\CRUD\CRUDTableColumn('Storage name', new \OLOG\CRUD\CRUDTableWidgetText('{this->storage_name}')),
                 new \OLOG\CRUD\CRUDTableColumn('File path in storage', new \OLOG\CRUD\CRUDTableWidgetText('{this->file_path_in_storage}')),
+                new \OLOG\CRUD\CRUDTableColumn('', new \OLOG\ImageManager\CRUDTableWidgetImage('{this->id}')),
                 new \OLOG\CRUD\CRUDTableColumn('Edit', new \OLOG\CRUD\CRUDTableWidgetTextWithLink('Edit', ImageEditAction::getUrl('{this->id}'))),
                 new \OLOG\CRUD\CRUDTableColumn('Delete', new \OLOG\CRUD\CRUDTableWidgetDelete()),
             ]

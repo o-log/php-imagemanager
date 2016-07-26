@@ -170,8 +170,8 @@ class CRUDFormWidgetImageUploader implements InterfaceCRUDFormWidget
                 }
 
                 var form_data = new FormData();
-                form_data.set("upload_storage_name", storage_name);
-                form_data.set("upload_image_file", $(".upload_image_file_input", $upload_form)[0].files[0]);
+                form_data.append("upload_storage_name", storage_name);
+                form_data.append("upload_image_file", $(".upload_image_file_input", $upload_form)[0].files[0]);
 
                 var upload_button = $(".upload_button", $upload_form);
                 upload_button.attr("disabled", true);
