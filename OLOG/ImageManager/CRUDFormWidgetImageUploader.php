@@ -118,7 +118,7 @@ class CRUDFormWidgetImageUploader implements InterfaceCRUDFormWidget
                 <div class="upload_form">
                     <input name="<?= Sanitize::sanitizeAttrValue(\OLOG\ImageManager\ImageUploadAction::FORCE_JPEG_IMAGE_FORMAT_FIELD_NAME) ?>"
                            type="hidden"
-                           value="<?= Sanitize::sanitizeAttrValue($this->getForceJpegImageFormat()) ?>">
+                           value="<?= Sanitize::sanitizeAttrValue(intval($this->getForceJpegImageFormat())) ?>">
                     <input name="<?= Sanitize::sanitizeAttrValue($this->getStorageFieldName()) ?>" class="form-control"
                            readonly
                            value="<?= Sanitize::sanitizeAttrValue($storage_name_field_value) ?>">
