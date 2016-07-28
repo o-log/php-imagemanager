@@ -125,7 +125,7 @@ class ImageManager
                 throw new \Exception('unable to create temp dir ' . $tmp_dir);
             }
         }
-        
+
         $file_extension = pathinfo($destiantion_image_file_path_in_storage, PATHINFO_EXTENSION);
         // уникальное случайное имя файла
         do {

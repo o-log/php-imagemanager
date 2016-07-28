@@ -116,9 +116,6 @@ class CRUDFormWidgetImageUploader implements InterfaceCRUDFormWidget
         <div class="row">
             <div class="col-sm-12">
                 <div class="upload_form">
-                    <input name="<?= Sanitize::sanitizeAttrValue(\OLOG\ImageManager\ImageUploadAction::FORCE_JPEG_IMAGE_FORMAT_FIELD_NAME) ?>"
-                           type="hidden"
-                           value="<?= Sanitize::sanitizeAttrValue(intval($this->getForceJpegImageFormat())) ?>">
                     <input name="<?= Sanitize::sanitizeAttrValue($this->getStorageFieldName()) ?>" class="form-control"
                            readonly
                            value="<?= Sanitize::sanitizeAttrValue($storage_name_field_value) ?>">
@@ -143,7 +140,8 @@ class CRUDFormWidgetImageUploader implements InterfaceCRUDFormWidget
                                                               onclick="processUpload(this,
                                                                   '<?= \OLOG\Sanitize::sanitizeUrl($this->getActionUrl()) ?>',
                                                                   '<?= Sanitize::sanitizeAttrValue($this->getStorageFieldName()) ?>',
-                                                                  '<?= Sanitize::sanitizeAttrValue($this->getFilePathInStorageFieldName()) ?>')"
+                                                                  '<?= Sanitize::sanitizeAttrValue($this->getFilePathInStorageFieldName()) ?>',
+                                                                  '<?= Sanitize::sanitizeAttrValue(intval($this->getForceJpegImageFormat())) ?>')"
                                                               disabled>Закачать</button></span>
                     </div>
                     <div class="alert alert-danger" role="alert" style="display: none"></div>
@@ -155,8 +153,6 @@ class CRUDFormWidgetImageUploader implements InterfaceCRUDFormWidget
                         <?php
                         if ($storage_name_field_value && $file_path_in_storage_field_value) {
                             $image_manager_obj = new ImageManager($storage_name_field_value);
-                            //$image_manager_config_obj = \OLOG\ImageManager\ImageManagerConfigWrapper::getImageManagerConfigObj();
-                            //echo '<img src="' . \OLOG\Sanitize::sanitizeUrl($image_manager_obj->getImageUrlByPreset($file_path_in_storage_field_value, $image_manager_config_obj->getDefaultUploadPresetClassName())) . '" width="100%">';
                             echo '<img src="' . \OLOG\Sanitize::sanitizeUrl($image_manager_obj->getImageUrlByPreset($file_path_in_storage_field_value, ImageManagerConfig::getDefaultUploadPresetClassName())) . '" width="100%">';
                         }
                         ?>
@@ -182,7 +178,7 @@ class CRUDFormWidgetImageUploader implements InterfaceCRUDFormWidget
                 upload_button.attr("disabled", disable_buttons);
             }
 
-            function processUpload(btn, upload_url, storage_name_input_name, file_path_in_storage_input_name) {
+            function processUpload(btn, upload_url, storage_name_input_name, file_path_in_storage_input_name, force_jpeg_image_format) {
                 var $upload_form = $(btn).closest('.upload_form');
 
                 var storage_name = $(".upload_storage_name_input", $upload_form).val();
@@ -190,12 +186,15 @@ class CRUDFormWidgetImageUploader implements InterfaceCRUDFormWidget
                     return;
                 }
 
-                var force_jpeg_image_format = $("input[name=<?= Sanitize::sanitizeAttrValue(\OLOG\ImageManager\ImageUploadAction::FORCE_JPEG_IMAGE_FORMAT_FIELD_NAME) ?>]", $upload_form).val();
+                var upload_image_file = $(".upload_image_file_input", $upload_form)[0].files[0];
+                if ((typeof upload_image_file == "undefined") || (upload_image_file == '')) {
+                    return;
+                }
 
                 var form_data = new FormData();
                 form_data.append("upload_storage_name", storage_name);
                 form_data.append("<?= Sanitize::sanitizeAttrValue(\OLOG\ImageManager\ImageUploadAction::FORCE_JPEG_IMAGE_FORMAT_FIELD_NAME)?>", force_jpeg_image_format);
-                form_data.append("upload_image_file", $(".upload_image_file_input", $upload_form)[0].files[0]);
+                form_data.append("upload_image_file", upload_image_file);
 
                 var upload_button = $(".upload_button", $upload_form);
                 upload_button.attr("disabled", true);
