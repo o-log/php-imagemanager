@@ -6,6 +6,8 @@ namespace OLOG\ImageManager;
 
 class ImageUploadAction
 {
+    const FORCE_JPEG_IMAGE_FORMAT_FIELD_NAME = 'force_jpeg_image_format';
+
     static public function getUrl()
     {
         return "/imagemanager/upload";
@@ -33,13 +35,12 @@ class ImageUploadAction
         }
 
         try {
-            \OLOG\POSTAccess::getRequiredPostValue('upload_storage_name');
+            $upload_storage_name = \OLOG\POSTAccess::getRequiredPostValue('upload_storage_name');
         } catch (\Exception $e) {
             echo json_encode(array('success' => false, 'error_message' => \OLOG\Sanitize::sanitizeTagContent('Ошибка формы запроса, не указан upload_storage_name')));
             return;
         }
 
-        $upload_storage_name = $_POST['upload_storage_name'];
         try {
             $upload_storage_obj = \OLOG\Storage\StorageFactory::getStorageObjByName($upload_storage_name);
         } catch (\Exception $e) {
@@ -52,17 +53,16 @@ class ImageUploadAction
             echo json_encode(array('success' => false, 'error_message' => 'Ошибка is_uploaded_file: ' . \OLOG\Sanitize::sanitizeAttrValue($tmp_file_path)));
             return;
         }
-        
-        $image_manager_obj = new ImageManager($upload_storage_name);
-        $file_path_in_storage = $image_manager_obj->storeUploadedImage($upload_image_file_arr['name'], $tmp_file_path);
 
-        //$image_manager_config_obj = \OLOG\ImageManager\ImageManagerConfigWrapper::getImageManagerConfigObj();
+        $force_jpeg_image_format = \OLOG\POSTAccess::getOptionalPostValue('force_jpeg_image_format', true);
+
+        $image_manager_obj = new ImageManager($upload_storage_name);
+        $file_path_in_storage = $image_manager_obj->storeUploadedImage($upload_image_file_arr['name'], $tmp_file_path, $force_jpeg_image_format);
 
         $return_arr = array(
             'success' => true,
             'storage_name' => $upload_storage_name,
             'file_path_in_storage' => $file_path_in_storage,
-            //'image_url' => $image_manager_obj->getImageUrlByPreset($file_path_in_storage, $image_manager_config_obj->getDefaultUploadPresetClassName())
             'image_url' => $image_manager_obj->getImageUrlByPreset($file_path_in_storage, ImageManagerConfig::getDefaultUploadPresetClassName())
         );
 

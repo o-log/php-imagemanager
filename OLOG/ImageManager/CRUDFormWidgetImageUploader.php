@@ -12,13 +12,15 @@ class CRUDFormWidgetImageUploader implements InterfaceCRUDFormWidget
     protected $storage_field_name;
     protected $action_url;
     protected $storages_arr;
+    protected $force_jpeg_image_format;
 
-    public function __construct($file_path_in_storage_field_name, $storage_field_name, $storages_arr, $action_url)
+    public function __construct($file_path_in_storage_field_name, $storage_field_name, $storages_arr, $action_url, $force_jpeg_image_format = true)
     {
         $this->setFilePathInStorageFieldName($file_path_in_storage_field_name);
         $this->setStorageFieldName($storage_field_name);
         $this->setActionUrl($action_url);
         $this->setStoragesArr($storages_arr);
+        $this->setForceJpegImageFormat($force_jpeg_image_format);
     }
 
     /**
@@ -85,6 +87,22 @@ class CRUDFormWidgetImageUploader implements InterfaceCRUDFormWidget
         $this->file_path_in_storage_field_name = $file_path_in_storage_field_name;
     }
 
+    /**
+     * @return boolean
+     */
+    public function getForceJpegImageFormat()
+    {
+        return $this->force_jpeg_image_format;
+    }
+
+    /**
+     * @param boolean $force_jpeg_image_format
+     */
+    public function setForceJpegImageFormat($force_jpeg_image_format)
+    {
+        $this->force_jpeg_image_format = $force_jpeg_image_format;
+    }
+
     public function html($obj)
     {
         static $CRUDFormWidgetImageUploader_include_script;
@@ -98,6 +116,9 @@ class CRUDFormWidgetImageUploader implements InterfaceCRUDFormWidget
         <div class="row">
             <div class="col-sm-12">
                 <div class="upload_form">
+                    <input name="<?= Sanitize::sanitizeAttrValue(\OLOG\ImageManager\ImageUploadAction::FORCE_JPEG_IMAGE_FORMAT_FIELD_NAME) ?>"
+                           type="hidden"
+                           value="<?= Sanitize::sanitizeAttrValue($this->getForceJpegImageFormat()) ?>">
                     <input name="<?= Sanitize::sanitizeAttrValue($this->getStorageFieldName()) ?>" class="form-control"
                            readonly
                            value="<?= Sanitize::sanitizeAttrValue($storage_name_field_value) ?>">
@@ -169,8 +190,11 @@ class CRUDFormWidgetImageUploader implements InterfaceCRUDFormWidget
                     return;
                 }
 
+                var force_jpeg_image_format = $("input[name=<?= Sanitize::sanitizeAttrValue(\OLOG\ImageManager\ImageUploadAction::FORCE_JPEG_IMAGE_FORMAT_FIELD_NAME) ?>]", $upload_form).val();
+
                 var form_data = new FormData();
                 form_data.append("upload_storage_name", storage_name);
+                form_data.append("<?= Sanitize::sanitizeAttrValue(\OLOG\ImageManager\ImageUploadAction::FORCE_JPEG_IMAGE_FORMAT_FIELD_NAME)?>", force_jpeg_image_format);
                 form_data.append("upload_image_file", $(".upload_image_file_input", $upload_form)[0].files[0]);
 
                 var upload_button = $(".upload_button", $upload_form);
