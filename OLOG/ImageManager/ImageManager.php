@@ -108,10 +108,6 @@ class ImageManager
 
     protected function saveImageToStorage($source_image_path_in_file_system, $destiantion_image_file_path_in_storage, $preset_class_name, $save_params_arr = ['quality' => 100])
     {
-        //$image_manager_config_obj = ImageManagerConfigWrapper::getImageManagerConfigObj();
-        //$tmp_dir = $image_manager_config_obj->getTempDir();
-        $tmp_dir = ImageManagerConfig::getTempDir();
-
         $imagine_obj = new \Imagine\Gd\Imagine();
         $image = $imagine_obj->open($source_image_path_in_file_system);
 
@@ -123,6 +119,13 @@ class ImageManager
 
         $image = $image_preset_obj->processImage($image);
 
+        $tmp_dir = ImageManagerConfig::getTempDir();
+        if (!file_exists($tmp_dir)) {
+            if (!mkdir($tmp_dir, 0755, true)) {
+                throw new \Exception('unable to create temp dir ' . $tmp_dir);
+            }
+        }
+        
         $file_extension = pathinfo($destiantion_image_file_path_in_storage, PATHINFO_EXTENSION);
         // уникальное случайное имя файла
         do {
