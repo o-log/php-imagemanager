@@ -97,8 +97,6 @@ class ImageManager
         }
         $image_path_in_storage = self::generateNewImageFileNameAndPath($file_extension);
 
-        //$image_manager_config_obj = ImageManagerConfigWrapper::getImageManagerConfigObj();
-        //$default_upload_preset_class_name = $image_manager_config_obj->getDefaultUploadPresetClassName();
         $default_upload_preset_class_name = ImageManagerConfig::getDefaultUploadPresetClassName();
 
         $this->saveImageToStorage($source_image_file_path, $image_path_in_storage, $default_upload_preset_class_name, $save_params_arr);
@@ -148,8 +146,6 @@ class ImageManager
      */
     public static function getPresetClassNameByAlias($preset_alias)
     {
-        //$image_manager_config_obj = ImageManagerConfigWrapper::getImageManagerConfigObj();
-        //$image_presets_class_names_arr = $image_manager_config_obj->getImagePresetsClassnamesArr();
         $image_presets_class_names_arr = ImageManagerConfig::getImagePresetsClassnamesArr();
 
         foreach ($image_presets_class_names_arr as $image_preset_class_name) {
