@@ -179,4 +179,25 @@ class ImageManager
 
         return $image_preset_obj->getAlias();
     }
+
+    public function storeImageAndCreateImageObj($source_image_file_path, $image_title, $preset_class_name, $force_jpeg_image_format = true)
+    {
+        $save_params_arr = array('quality' => 100);
+        $file_extension = pathinfo($source_image_file_path, PATHINFO_EXTENSION);
+        if ($force_jpeg_image_format) {
+            $file_extension = "jpg";
+            $save_params_arr['format'] = "jpeg";
+        }
+        $image_path_in_storage = self::generateNewImageFileNameAndPath($file_extension);
+
+        $this->saveImageToStorage($source_image_file_path, $image_path_in_storage, $preset_class_name, $save_params_arr);
+
+        $image_obj = new \OLOG\Image\Image();
+        $image_obj->setStorageName($this->getStorageName());
+        $image_obj->setFilePathInStorage($image_path_in_storage);
+        $image_obj->setTitle($image_title);
+        $image_obj->save();
+
+        return $image_obj->getId();
+    }
 }
