@@ -238,8 +238,8 @@ class CRUDFormWidgetImageUploader implements InterfaceCRUDFormWidget
                         return;
                     }
 
-                    $("input[name=" + file_path_in_storage_input_name + "]", $upload_form).val(data.file_path_in_storage);
-                    $("input[name=" + storage_name_input_name + "]", $upload_form).val(data.storage_name);
+                    $("input[name=" + file_path_in_storage_input_name + "]", $upload_form).val(data.file_path_in_storage).trigger('change');
+                    $("input[name=" + storage_name_input_name + "]", $upload_form).val(data.storage_name).trigger('change');
                     $(".uploaded_image", $upload_form).html('<img width="100%" src="' + data.image_url + '">');
                 }).fail(function () {
                     upload_button.attr("disabled", false);
