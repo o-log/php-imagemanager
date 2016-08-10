@@ -12,8 +12,8 @@ class Image implements
     \OLOG\Model\InterfaceDelete
 {
     use \OLOG\Model\FactoryTrait;
-    use \OLOG\Model\ActiveRecord;
-    use \OLOG\Model\ProtectProperties;
+    use \OLOG\Model\ActiveRecordTrait;
+    use \OLOG\Model\ProtectPropertiesTrait;
 
     const DB_ID = \OLOG\ImageManager\ImageManagerConstants::DB_NAME_PHPIMAGEMANAGER;
     const DB_TABLE_NAME = 'olog_image_image';
