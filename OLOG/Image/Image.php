@@ -22,7 +22,29 @@ class Image implements
     protected $storage_name;
     protected $file_path_in_storage;
     protected $title = "";
+    protected $copyright_text = "";
+    protected $copyright_url = "";
     protected $id;
+
+    public function getCopyrightUrl(){
+        return $this->copyright_url;
+    }
+
+    public function setCopyrightUrl($value){
+        $this->copyright_url = $value;
+    }
+
+
+
+    public function getCopyrightText(){
+        return $this->copyright_text;
+    }
+
+    public function setCopyrightText($value){
+        $this->copyright_text = $value;
+    }
+
+
 
     public function getTitle()
     {

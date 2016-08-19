@@ -47,24 +47,32 @@ class ImageEditAction implements
 
         $this->image_id = $image_id;
 
-        $form_fields_arr = array();
-
-        $form_fields_arr[] = new \OLOG\CRUD\CRUDFormRow(
-            'Название',
-            new \OLOG\CRUD\CRUDFormWidgetInput('title')
+        $html = \OLOG\CRUD\CRUDForm::html(
+            $image_obj,
+            [
+                new \OLOG\CRUD\CRUDFormRow(
+                    'Название',
+                    new \OLOG\CRUD\CRUDFormWidgetInput('title')
+                ),
+                new \OLOG\CRUD\CRUDFormRow(
+                    'Изображение',
+                    new \OLOG\ImageManager\CRUDFormWidgetImageUploader(
+                        'file_path_in_storage',
+                        'storage_name',
+                        \OLOG\ImageManager\ImageManagerConfigWrapper::getAvailableStorageNamesArr(),
+                        \OLOG\ImageManager\ImageUploadAction::getUrl()
+                    )
+                ),
+                new \OLOG\CRUD\CRUDFormRow(
+                    'Строка копирайта',
+                    new \OLOG\CRUD\CRUDFormWidgetInput('copyright_text')
+                ),
+                new \OLOG\CRUD\CRUDFormRow(
+                    'Ссылка копирайта',
+                    new \OLOG\CRUD\CRUDFormWidgetInput('copyright_url')
+                ),
+            ]
         );
-
-        $form_fields_arr[] = new \OLOG\CRUD\CRUDFormRow(
-            'Изображение',
-            new \OLOG\ImageManager\CRUDFormWidgetImageUploader(
-                'file_path_in_storage',
-                'storage_name',
-                \OLOG\ImageManager\ImageManagerConfigWrapper::getAvailableStorageNamesArr(),
-                \OLOG\ImageManager\ImageUploadAction::getUrl()
-            )
-        );
-
-        $html = \OLOG\CRUD\CRUDForm::html($image_obj, $form_fields_arr);
 
         \OLOG\BT\Layout::render($html, $this);
     }

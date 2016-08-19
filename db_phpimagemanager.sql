@@ -4,4 +4,6 @@ array(
 'alter table olog_image_image add column storage_name varchar(255)  not null    /* rand903603 */;',
 'alter table olog_image_image add column file_path_in_storage varchar(255)  not null    /* rand465839 */;',
 'alter table olog_image_image add column title varchar(1000)  not null   default ""  /* rand499882 */;',
+'alter table olog_image_image add column copyright_text varchar(255)  not null   default ""  /* rand230308 */;',
+'alter table olog_image_image add column copyright_url varchar(255)  not null   default ""  /* rand998386 */;',
 )
