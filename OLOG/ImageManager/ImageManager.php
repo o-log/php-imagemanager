@@ -91,7 +91,7 @@ class ImageManager
 
     public function storeUploadedImage($source_image_file_name, $source_image_file_path, $force_jpeg_image_format = true)
     {
-        $save_params_arr = array('quality' => 100);
+        $save_params_arr = array('quality' => 100); // это аплоад, здесь качество из конфига не берем, аплоадим с максимальным качеством
         $file_extension = pathinfo($source_image_file_name, PATHINFO_EXTENSION);
         if ($force_jpeg_image_format) {
             $file_extension = "jpg";
@@ -184,7 +184,7 @@ class ImageManager
 
     public function storeImageAndCreateImageObj($source_image_file_path, $image_title, $preset_class_name, $force_jpeg_image_format = true)
     {
-        $save_params_arr = array('quality' => 100);
+        $save_params_arr = array('quality' => ImageManagerConfig::getQuality());
         $file_extension = pathinfo($source_image_file_path, PATHINFO_EXTENSION);
         if ($force_jpeg_image_format) {
             $file_extension = "jpg";

@@ -10,6 +10,23 @@ class ImageManagerConfig
     static protected $default_upload_preset_class_name; // TODO: default value
     static protected $temp_dir; // TODO: default value
     static protected $image_presets_class_names_arr = [];
+    static protected $quality = 90;
+
+    /**
+     * @return int
+     */
+    public static function getQuality()
+    {
+        return self::$quality;
+    }
+
+    /**
+     * @param int $quality
+     */
+    public static function setQuality($quality)
+    {
+        self::$quality = $quality;
+    }
 
     /**
      * @return mixed
