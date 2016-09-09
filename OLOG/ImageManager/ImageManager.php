@@ -44,7 +44,7 @@ class ImageManager
 
         $fp = fopen($fullpath, 'rb');
         header("Cache-Control:public");
-        header("Cache-Control:max-age=315360000");
+        header("Cache-Control:max-age=315360000", false);
         header("Content-Type: image/" . $ext);
         header("Content-Length: " . filesize($fullpath));
         fpassthru($fp);
