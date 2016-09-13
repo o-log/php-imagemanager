@@ -36,10 +36,11 @@ class ImageManager
         $fullpath = $this->getImagePathInFileSystemByPreset($image_path_in_storage, $preset_class_name);
 
         if (!file_exists($fullpath)) {
-            error_log("PHP Fatal error. Couldn't get static file " . $fullpath );
             $image_path_in_file_system = $this->getImagePathInFileSystem($image_path_in_storage);
             \OLOG\Exits::exit404If(!file_exists($image_path_in_file_system));
             $this->moveImageByPreset($image_path_in_storage, $preset_class_name);
+        } else {
+            error_log("PHP Fatal error. Obtain to generate existing in presets file" . $fullpath );
         }
         $ext = pathinfo($fullpath, PATHINFO_EXTENSION);
 
