@@ -86,13 +86,13 @@ class ImageManager
         $image_path_in_file_system = $this->getImagePathInFileSystem($image_path_in_storage);
         $image_path_in_storage = $preset_alias . DIRECTORY_SEPARATOR . $image_path_in_storage;
 
-        $save_params_arr = array('quality' => ImageManagerConfig::getQuality());
+        $save_params_arr = array('quality' => ImageManagerConfig::getQuality(), 'jpeg_quality' => ImageManagerConfig::getQuality());
         $this->saveImageToStorage($image_path_in_file_system, $image_path_in_storage, $preset_class_name, $save_params_arr);
     }
 
     public function storeUploadedImage($source_image_file_name, $source_image_file_path, $force_jpeg_image_format = true)
     {
-        $save_params_arr = array('quality' => 100); // это аплоад, здесь качество из конфига не берем, аплоадим с максимальным качеством
+        $save_params_arr = array('quality' => 100, 'jpeg_quality' => 100); // это аплоад, здесь качество из конфига не берем, аплоадим с максимальным качеством
         $file_extension = pathinfo($source_image_file_name, PATHINFO_EXTENSION);
         if ($force_jpeg_image_format) {
             $file_extension = "jpg";
@@ -185,7 +185,7 @@ class ImageManager
 
     public function storeImageAndCreateImageObj($source_image_file_path, $image_title, $preset_class_name, $force_jpeg_image_format = true)
     {
-        $save_params_arr = array('quality' => ImageManagerConfig::getQuality());
+        $save_params_arr = array('quality' => ImageManagerConfig::getQuality(), 'jpeg_quality' => ImageManagerConfig::getQuality());
         $file_extension = pathinfo($source_image_file_path, PATHINFO_EXTENSION);
         if ($force_jpeg_image_format) {
             $file_extension = "jpg";
