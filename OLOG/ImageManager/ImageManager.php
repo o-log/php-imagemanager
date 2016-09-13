@@ -86,7 +86,8 @@ class ImageManager
         $image_path_in_file_system = $this->getImagePathInFileSystem($image_path_in_storage);
         $image_path_in_storage = $preset_alias . DIRECTORY_SEPARATOR . $image_path_in_storage;
 
-        $this->saveImageToStorage($image_path_in_file_system, $image_path_in_storage, $preset_class_name);
+        $save_params_arr = array('quality' => ImageManagerConfig::getQuality());
+        $this->saveImageToStorage($image_path_in_file_system, $image_path_in_storage, $preset_class_name, $save_params_arr);
     }
 
     public function storeUploadedImage($source_image_file_name, $source_image_file_path, $force_jpeg_image_format = true)
