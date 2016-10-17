@@ -54,7 +54,8 @@ class ImageListAction implements
                             'file_path_in_storage',
                             'storage_name',
                             \OLOG\ImageManager\ImageManagerConfigWrapper::getAvailableStorageNamesArr(),
-                            \OLOG\ImageManager\ImageUploadAction::getUrl()
+                            \OLOG\ImageManager\ImageUploadAction::getUrl(),
+                            false
                         )
                     )
                 ]
