@@ -142,4 +142,14 @@ class Image implements
         $image_manager_obj = new ImageManager($storage_name);
         return $image_manager_obj->getImageUrlByPreset($file_path_in_storage, $preset_class_name);
     }
+
+    public function beforeSave()
+    {
+        if($this->copyright_url){
+            preg_match("/(?P<protocol>((http\:\/\/)|(https\:\/\/))*)(?P<domain>[a-zA-Z0-9\-]+\.\w{2,5})/", $this->copyright_url, $match);
+            if(empty($match['protocol'])){
+                $this->copyright_url = 'http://'.$this->copyright_url;
+            }
+        }
+    }
 }
