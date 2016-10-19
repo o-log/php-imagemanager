@@ -1,51 +1,51 @@
 <?php
 
-
 namespace OLOG\Image\Pages\Admin;
 
+use OLOG\InterfaceAction;
+use OLOG\Layouts\AdminLayoutSelector;
+use OLOG\Layouts\InterfacePageTitle;
+use OLOG\Layouts\InterfaceTopActionObj;
 
-class ImageEditAction implements
-    \OLOG\BT\InterfaceBreadcrumbs,
-    \OLOG\BT\InterfacePageTitle,
-    \OLOG\BT\InterfaceUserName
+class ImageEditAction extends ImagemanagerAdminActionsBaseProxy implements
+    InterfaceAction,
+    InterfacePageTitle,
+    InterfaceTopActionObj
 {
-    use \OLOG\Auth\Admin\CurrentUserNameTrait;
-
     protected $image_id;
 
-    static public function getUrl($image_id = '(\d+)')
+    public function topActionObj()
     {
-        return '/admin/image/' . $image_id;
+        return new ImageListAction();
     }
 
-    public function currentPageTitle()
+    public function __construct($image_id)
     {
-        return self::pageTitle($this->image_id);
+        $this->image_id = $image_id;
     }
 
-    public static function pageTitle($image_id)
+    public function url()
     {
-        return 'Image ' . $image_id;
+        return '/admin/image/' . $this->image_id;
     }
 
-    public function currentBreadcrumbsArr()
-    {
-        return self::breadcrumbsArr($this->image_id);
+    static public function urlMask(){
+        return '/admin/image/(\d+)';
     }
 
-    public static function breadcrumbsArr($image_id)
+    public function pageTitle()
     {
-        return array_merge(ImageListAction::breadcrumbsArr(), [\OLOG\BT\BT::a(self::getUrl($image_id), self::pageTitle($image_id))]);
+        return 'Image ' . $this->image_id;
     }
 
-    public function action($image_id)
+    public function action()
     {
         \OLOG\Exits::exit403If(!\OLOG\Auth\Operator::currentOperatorHasAnyOfPermissions([\OLOG\ImageManager\Permissions::PERMISSION_PHPIMAGEMANAGER_MANAGE_IMAGES]));
-        
+
+        $image_id = $this->image_id;
+
         $image_obj = \OLOG\Image\Image::factory($image_id, false);
         \OLOG\Exits::exit404If(!$image_obj);
-
-        $this->image_id = $image_id;
 
         $html = \OLOG\CRUD\CRUDForm::html(
             $image_obj,
@@ -74,6 +74,6 @@ class ImageEditAction implements
             ]
         );
 
-        \OLOG\BT\Layout::render($html, $this);
+        AdminLayoutSelector::render($html, $this);
     }
 }

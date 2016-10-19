@@ -11,6 +11,23 @@ class ImageManagerConfig
     static protected $temp_dir; // TODO: default value
     static protected $image_presets_class_names_arr = [];
     static protected $quality = 90;
+    static protected $admin_actions_base_classname;
+
+    /**
+     * @return mixed
+     */
+    public static function getAdminActionsBaseClassname()
+    {
+        return self::$admin_actions_base_classname;
+    }
+
+    /**
+     * @param mixed $admin_actions_base_classname
+     */
+    public static function setAdminActionsBaseClassname($admin_actions_base_classname)
+    {
+        self::$admin_actions_base_classname = $admin_actions_base_classname;
+    }
 
     /**
      * @return int

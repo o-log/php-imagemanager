@@ -3,12 +3,15 @@
 
 namespace ImageManagerDemo;
 
+use OLOG\BT\LayoutBootstrap;
 use OLOG\Cache\CacheConfig;
 use OLOG\Cache\MemcacheServerSettings;
 use OLOG\DB\DBConfig;
 use OLOG\DB\DBSettings;
+use OLOG\Image\ImageMenu;
 use OLOG\ImageManager\ImageManagerConfig;
 use OLOG\ImageManager\ImageManagerConstants;
+use OLOG\Layouts\LayoutsConfig;
 use OLOG\Storage\LocalStorage;
 use OLOG\Storage\StorageConfig;
 
@@ -29,6 +32,16 @@ class ImageManagerDemoCommonConfig
             ImageManagerConstants::DB_NAME_PHPIMAGEMANAGER,
             new DBSettings('localhost', 'db_phpimagemanagerdemo', 'root', '1')
         );
+
+        /*
+        LayoutsConfig::setAdminMenuClassesArr([
+            ImageMenu::class
+        ]);
+        */
+
+        LayoutsConfig::setAdminLayoutClassName(LayoutBootstrap::class);
+
+        ImageManagerConfig::setAdminActionsBaseClassname(ImagemanagerDemoAdminActionsBase::class);
 
         CacheConfig::addServerSettingsObj(
             new MemcacheServerSettings('localhost', 11211)
