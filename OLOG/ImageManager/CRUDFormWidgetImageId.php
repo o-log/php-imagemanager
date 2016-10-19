@@ -111,7 +111,7 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
             });
 
             $('#<?= $select_element_id ?>_btn_link').on('click', function (e) {
-                var url = '<?= ImageEditAction::getUrl('REFERENCED_ID') ?>';
+                var url = '<?= (new ImageEditAction('REFERENCED_ID'))->url() ?>';
                 var id = $('#<?= $select_element_id ?>').val();
                 url = url.replace('REFERENCED_ID', id);
 
