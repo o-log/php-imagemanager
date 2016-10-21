@@ -10,7 +10,6 @@
     "imagine/imagine": "~0.5.0",
     "o-log/php-lib" : "1.*",
     "o-log/php-router" : "1.*",
-    "o-log/php-bt" : "5.*",
     "o-log/php-model" : "6.*",
     "o-log/php-crud" : "3.*",
     "o-log/php-storage" : "1.*",
