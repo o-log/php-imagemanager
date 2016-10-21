@@ -2,6 +2,7 @@
 
 namespace ImageManagerDemo;
 
+use OLOG\Layouts\AdminLayoutSelector;
 
 class DemoAction
 {
@@ -16,7 +17,7 @@ class DemoAction
         $this->renderContent();
         $html = ob_get_clean();
 
-        \OLOG\BT\Layout::render($html, $this);
+        AdminLayoutSelector::render($html, $this);
     }
 
     public function renderContent()
