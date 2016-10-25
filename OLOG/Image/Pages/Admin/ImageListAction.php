@@ -54,7 +54,9 @@ class ImageListAction extends ImagemanagerAdminActionsBaseProxy implements
                 new \OLOG\CRUD\CRUDTableColumn('', new \OLOG\ImageManager\CRUDTableWidgetImage('{this->id}')),
                 new \OLOG\CRUD\CRUDTableColumn('Edit', new \OLOG\CRUD\CRUDTableWidgetTextWithLink('Edit', (new ImageEditAction('{this->id}'))->url())),
                 new \OLOG\CRUD\CRUDTableColumn('Delete', new \OLOG\CRUD\CRUDTableWidgetDelete()),
-            ]
+            ],
+            [],
+            'id desc'
         );
 
         AdminLayoutSelector::render($html, $this);
