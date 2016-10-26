@@ -116,6 +116,15 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
 
                 window.location = url;
             });
+            var $input_is_null = $('#<?= $select_element_id ?>_is_null');
+            var $input = $('#<?= $select_element_id ?>');
+            $input.on('change keydown', function () {
+                if ($(this).val() == '') {
+                    $input_is_null.val('1');
+                }else{
+                    $input_is_null.val('');
+                }
+            });
         </script>
 
         <?php
