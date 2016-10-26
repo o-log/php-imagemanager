@@ -55,8 +55,7 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
         $html .= '<button type="button" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_btn_is_null" class="btn btn-default" data-toggle="modal"><span class="glyphicon glyphicon-remove"></span></button>';
         $html .= '</span>';
         $html .= '<input type="hidden" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_is_null" name="' . Sanitize::sanitizeAttrValue($field_name) . '___is_null" value="' . $is_null_value . '"/>';
-        $html .= '<div class="form-control" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_text">' . $field_value . '</div>';
-        $html .= '<input type="hidden" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '" name="' . Sanitize::sanitizeAttrValue($field_name) . '" value="' . $field_value . '" data-field="' . Sanitize::sanitizeAttrValue($select_element_id) . '_text"/>';
+        $html .= '<input type="input" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '" name="' . Sanitize::sanitizeAttrValue($field_name) . '" class="form-control" value="' . $field_value . '" data-field="' . Sanitize::sanitizeAttrValue($select_element_id) . '_text"/>';
 
         //if ($this->getEditorUrl()) {
         $html .= '<span class="input-group-btn">';
@@ -116,6 +115,15 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
                 url = url.replace('REFERENCED_ID', id);
 
                 window.location = url;
+            });
+            var $input_is_null = $('#<?= $select_element_id ?>_is_null');
+            var $input = $('#<?= $select_element_id ?>');
+            $input.on('change keydown', function () {
+                if ($(this).val() == '') {
+                    $input_is_null.val('1');
+                }else{
+                    $input_is_null.val('');
+                }
             });
         </script>
 
