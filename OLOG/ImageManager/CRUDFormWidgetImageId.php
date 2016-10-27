@@ -13,10 +13,12 @@ use OLOG\Sanitize;
 class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
 {
     protected $field_name;
+    protected $ajax_action_url;
 
-    public function __construct($field_name)
+    public function __construct($field_name, $ajax_action_url = null)
     {
         $this->setFieldName($field_name);
+        $this->setAjaxActionUrl($ajax_action_url);
     }
 
     public function html($obj)
@@ -43,13 +45,11 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
 
         $html .= '<div class="input-group">';
 
-        /*
         if ($this->getAjaxActionUrl()) {
             $html .= '<span class="input-group-btn">';
-            $html .= '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#' . $choose_form_element_id . '">Выбрать</button>';
+            $html .= '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#' . $choose_form_element_id . '"><span class="glyphicon glyphicon-folder-open"></span></button>';
             $html .= '</span>';
         }
-        */
 
         $html .= '<span class="input-group-btn">';
         $html .= '<button type="button" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_btn_is_null" class="btn btn-default" data-toggle="modal"><span class="glyphicon glyphicon-remove"></span></button>';
@@ -76,29 +76,29 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
             }
         }
 
-        //$html .= BT::modal($choose_form_element_id, 'Выбрать');
+        $html .= BT::modal($choose_form_element_id, 'Выбрать');
 
         ob_start();?>
 
         <script>
-            /*
-             $('#<?= $choose_form_element_id ?>').on('shown.bs.modal', function (e) {
-             $.ajax({
-             url: "<?= '' ?>"
-             }).success(function(received_html) {
-             $('#<?= $choose_form_element_id ?> .modal-body').html(received_html);
-             });
-             }).on('click', '.js-ajax-form-select', function (e) {
-             e.preventDefault();
-             var select_id = $(this).data('id');
-             var select_title = $(this).data('title');
-             $('#<?= $choose_form_element_id ?>').modal('hide');
-             $('#<?= $select_element_id ?>_text').text(select_title);
-             $('#<?= $select_element_id ?>_btn_link').attr('disabled', false);
-             $('#<?= $select_element_id ?>').val(select_id).trigger('change');
-             $('#<?= $select_element_id ?>_is_null').val('');
-             });
-             */
+
+            $('#<?= $choose_form_element_id ?>').on('shown.bs.modal', function (e) {
+                $.ajax({
+                    url: "<?= $this->getAjaxActionUrl() ?>"
+                }).success(function(received_html) {
+                    $('#<?= $choose_form_element_id ?> .modal-body').html(received_html);
+                });
+            }).on('click', '.js-ajax-form-select', function (e) {
+                e.preventDefault();
+                var select_id = $(this).data('id');
+                var select_title = $(this).data('title');
+                $('#<?= $choose_form_element_id ?>').modal('hide');
+                $('#<?= $select_element_id ?>_text').text(select_title);
+                $('#<?= $select_element_id ?>_btn_link').attr('disabled', false);
+                $('#<?= $select_element_id ?>').val(select_id).trigger('change');
+                $('#<?= $select_element_id ?>_is_null').val('');
+            });
+
 
             $('#<?= $select_element_id ?>_btn_is_null').on('click', function (e) {
                 e.preventDefault();
@@ -148,4 +148,21 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
     {
         $this->field_name = $field_name;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAjaxActionUrl()
+    {
+        return $this->ajax_action_url;
+    }
+
+    /**
+     * @param mixed $ajax_action_url
+     */
+    public function setAjaxActionUrl($ajax_action_url)
+    {
+        $this->ajax_action_url = $ajax_action_url;
+    }
+
 }
