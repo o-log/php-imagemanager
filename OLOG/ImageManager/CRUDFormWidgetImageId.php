@@ -15,7 +15,7 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
     protected $field_name;
     protected $ajax_action_url;
 
-    public function __construct($field_name, $ajax_action_url)
+    public function __construct($field_name, $ajax_action_url = null)
     {
         $this->setFieldName($field_name);
         $this->setAjaxActionUrl($ajax_action_url);
