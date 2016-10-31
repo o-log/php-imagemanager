@@ -12,5 +12,6 @@ class ImageManagerRouting
         \OLOG\Router::matchAction(ImageUploadAction::class, 0);
         \OLOG\Router::processAction(\OLOG\Image\Pages\Admin\ImageListAction::class, 0);
         \OLOG\Router::processAction(\OLOG\Image\Pages\Admin\ImageEditAction::class, 0);
+	    \OLOG\Router::processAction(ImagePathByImageIdAjaxAction::class, 0);
     }
 }
