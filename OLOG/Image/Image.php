@@ -4,6 +4,8 @@ namespace OLOG\Image;
 
 
 use OLOG\ImageManager\ImageManager;
+use OLOG\Model\ActiveRecordHelper;
+use OLOG\Model\InterfaceFactory;
 
 class Image implements
     \OLOG\Model\InterfaceFactory,
@@ -141,6 +143,20 @@ class Image implements
 
         $image_manager_obj = new ImageManager($storage_name);
         return $image_manager_obj->getImageUrlByPreset($file_path_in_storage, $preset_class_name);
+    }
+
+    public function afterDelete()
+    {
+        if ($this instanceof InterfaceFactory) {
+            $this->removeFromFactoryCache();
+        }
+
+        $file_path_in_storage = $this->getFilePathInStorage();
+        $storage_name = $this->getStorageName();
+        if ($file_path_in_storage && $storage_name) {
+            $storage_obj = \OLOG\Storage\StorageFactory::getStorageObjByName($storage_name);
+            $storage_obj->deleteFileFromStorage($file_path_in_storage);
+        }
     }
 
     public function beforeSave()
