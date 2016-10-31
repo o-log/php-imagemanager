@@ -11,7 +11,7 @@ class ImagePathByImageIdAjaxAction implements InterfaceAction
 {
 	protected $image_id;
 
-	public function __construct($image_id='(\d+)')
+	public function __construct($image_id)
 	{
 		$this->image_id = $image_id;
 	}
