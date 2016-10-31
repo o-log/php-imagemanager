@@ -14,15 +14,11 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
 {
     protected $field_name;
     protected $ajax_action_url;
-    protected $image_preset_class;
-    protected $show_editor_btn;
 
-    public function __construct($field_name, $ajax_action_url = null, $image_preset_class = Preset320x240::class, $show_editor_btn = true)
+    public function __construct($field_name, $ajax_action_url = null)
     {
         $this->setFieldName($field_name);
         $this->setAjaxActionUrl($ajax_action_url);
-        $this->setImagePresetClass($image_preset_class);
-        $this->setShowEditorBtn($show_editor_btn);
     }
 
     public function html($obj)
@@ -61,18 +57,18 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
         $html .= '<input type="hidden" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_is_null" name="' . Sanitize::sanitizeAttrValue($field_name) . '___is_null" value="' . $is_null_value . '"/>';
         $html .= '<input type="input" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '" name="' . Sanitize::sanitizeAttrValue($field_name) . '" class="form-control" value="' . $field_value . '" data-field="' . Sanitize::sanitizeAttrValue($select_element_id) . '_text"/>';
 
-        if ($this->getShowEditorBtn()) {
-            $html .= '<span class="input-group-btn">';
-            $html .= '<button ' . $disabled_btn_link . ' type="button" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_btn_link" class="btn btn-default" data-toggle="modal">Перейти</button>';
-            $html .= '</span>';
-        }
+        //if ($this->getEditorUrl()) {
+        $html .= '<span class="input-group-btn">';
+        $html .= '<button ' . $disabled_btn_link . ' type="button" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_btn_link" class="btn btn-default" data-toggle="modal">Перейти</button>';
+        $html .= '</span>';
+        //}
 
         $html .= '</div>';
 
         if ($field_value) {
             $image_obj = \OLOG\Image\Image::factory($field_value, false);
             if ($image_obj) {
-                $image_url = $image_obj->getImageUrlByPreset($this->getImagePresetClass());
+                $image_url = $image_obj->getImageUrlByPreset(Preset320x240::class);
                 if ($image_url != '') {
                     $html .= '<div style="padding-top: 10px;"><img id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_img" src="' . \OLOG\Sanitize::sanitizeUrl($image_url) . '"/></div>';
                 }
@@ -101,7 +97,6 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
                 $('#<?= $select_element_id ?>_btn_link').attr('disabled', false);
                 $('#<?= $select_element_id ?>').val(select_id).trigger('change');
                 $('#<?= $select_element_id ?>_is_null').val('');
-                $('#<?= $select_element_id ?>_img').remove();
             });
 
 
@@ -170,35 +165,4 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
         $this->ajax_action_url = $ajax_action_url;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getImagePresetClass()
-    {
-        return $this->image_preset_class;
-    }
-
-    /**
-     * @param mixed $image_preset_class
-     */
-    public function setImagePresetClass($image_preset_class)
-    {
-        $this->image_preset_class = $image_preset_class;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getShowEditorBtn()
-    {
-        return $this->show_editor_btn;
-    }
-
-    /**
-     * @param mixed $show_editor_btn
-     */
-    public function setShowEditorBtn($show_editor_btn)
-    {
-        $this->show_editor_btn = $show_editor_btn;
-    }
 }
