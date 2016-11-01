@@ -8,6 +8,7 @@ use OLOG\CRUD\InterfaceCRUDFormWidget;
 use OLOG\Image\Image;
 use OLOG\Image\Pages\Admin\ImageEditAction;
 use OLOG\ImageManager\Presets\Preset320x240;
+use OLOG\Preloader;
 use OLOG\Sanitize;
 
 class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
@@ -39,6 +40,7 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
         }
 
         $html = '';
+	    $html .= Preloader::preloaderJsHtml();
 
         $select_element_id = 'js_select_' . rand(1, 999999);
         $choose_form_element_id = 'collapse_' . rand(1, 999999);
@@ -55,7 +57,7 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
         $html .= '<button type="button" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_btn_is_null" class="btn btn-default" data-toggle="modal"><span class="glyphicon glyphicon-remove"></span></button>';
         $html .= '</span>';
         $html .= '<input type="hidden" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_is_null" name="' . Sanitize::sanitizeAttrValue($field_name) . '___is_null" value="' . $is_null_value . '"/>';
-        $html .= '<input type="input" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '" name="' . Sanitize::sanitizeAttrValue($field_name) . '" class="form-control" value="' . $field_value . '" data-field="' . Sanitize::sanitizeAttrValue($select_element_id) . '_text"/>';
+        $html .= '<input disabled type="input" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '" name="' . Sanitize::sanitizeAttrValue($field_name) . '" class="form-control" value="' . $field_value . '" data-field="' . Sanitize::sanitizeAttrValue($select_element_id) . '_text"/>';
 
         //if ($this->getEditorUrl()) {
         $html .= '<span class="input-group-btn">';
@@ -70,9 +72,10 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
             if ($image_obj) {
                 $image_url = $image_obj->getImageUrlByPreset(Preset320x240::class);
                 if ($image_url != '') {
-                    $html .= '<div style="padding-top: 10px;"><img id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_img" src="' . \OLOG\Sanitize::sanitizeUrl($image_url) . '"/></div>';
+	                $html .= '<div style="margin-top: 15px;" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_img_box">';
+		            $html .= '<img id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_img" src="' . \OLOG\Sanitize::sanitizeUrl($image_url) . '"/>';
+	                $html .= '</div>';
                 }
-
             }
         }
 
@@ -82,13 +85,21 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
 
         <script>
 
-            $('#<?= $choose_form_element_id ?>').on('shown.bs.modal', function (e) {
+	        $('#<?= $choose_form_element_id ?>').on('hidden.bs.modal', function () {
+		        $('#<?= $choose_form_element_id ?> .modal-body').html('');
+		    });
+
+	        $('#<?= $choose_form_element_id ?>').on('shown.bs.modal', function (e) {
+		        preloader.show();
                 $.ajax({
                     url: "<?= $this->getAjaxActionUrl() ?>"
                 }).success(function(received_html) {
                     $('#<?= $choose_form_element_id ?> .modal-body').html(received_html);
+	                preloader.hide();
                 });
-            }).on('click', '.js-ajax-form-select', function (e) {
+            });
+
+            $('#<?= $choose_form_element_id ?>').on('click', '.js-ajax-form-select', function (e) {
                 e.preventDefault();
                 var select_id = $(this).data('id');
                 var select_title = $(this).data('title');
@@ -118,12 +129,37 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
             });
             var $input_is_null = $('#<?= $select_element_id ?>_is_null');
             var $input = $('#<?= $select_element_id ?>');
-            $input.on('change keydown', function () {
+            $input.on('change', function () {
                 if ($(this).val() == '') {
                     $input_is_null.val('1');
                 }else{
                     $input_is_null.val('');
                 }
+            });
+
+            $input.on('change', function () {
+	            var $input = $('#<?= $select_element_id ?>');
+	            var $image = $('#<?= $select_element_id ?>_img');
+	            var $image_box = $('#<?= $select_element_id ?>_img_box');
+	            if ($image.length == 0) {
+		            $image = $('<img id="<?= $select_element_id ?>_img">');
+		            $image_box.html($image);
+	            }
+	            var image_id = $input.val();
+	            if (image_id != '') {
+		            preloader.show();
+		            $.ajax('/imagemanager/image_path_ajax/' + image_id)
+			            .done(function (data) {
+				            if (data.success) {
+					            $image.attr('src', data.image_path).on('load', function () {
+						            preloader.hide();
+					            });
+				            } else {
+					            preloader.hide();
+					            alert('Картинки с таким ID не существует!');
+				            }
+			            });
+	            }
             });
         </script>
 
