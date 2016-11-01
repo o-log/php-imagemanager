@@ -17,7 +17,7 @@ class ImageListAction extends ImagemanagerAdminActionsBaseProxy implements
 
     public function pageTitle()
     {
-        return 'Images';
+        return 'Картинки';
     }
 
     public function action()
