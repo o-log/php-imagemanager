@@ -72,7 +72,7 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
             if ($image_obj) {
                 $image_url = $image_obj->getImageUrlByPreset(Preset320x240::class);
                 if ($image_url != '') {
-	                $html .= '<div style="margin-top: 15px;" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_img_box">;';
+	                $html .= '<div style="margin-top: 15px;" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_img_box">';
 		            $html .= '<img id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_img" src="' . \OLOG\Sanitize::sanitizeUrl($image_url) . '"/>';
 	                $html .= '</div>';
                 }
