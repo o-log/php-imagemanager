@@ -85,13 +85,21 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
 
         <script>
 
-            $('#<?= $choose_form_element_id ?>').on('shown.bs.modal', function (e) {
+	        $('#<?= $choose_form_element_id ?>').on('hidden.bs.modal', function () {
+		        $('#<?= $choose_form_element_id ?> .modal-body').html('');
+		    });
+
+	        $('#<?= $choose_form_element_id ?>').on('shown.bs.modal', function (e) {
+		        preloader.show();
                 $.ajax({
                     url: "<?= $this->getAjaxActionUrl() ?>"
                 }).success(function(received_html) {
                     $('#<?= $choose_form_element_id ?> .modal-body').html(received_html);
+	                preloader.hide();
                 });
-            }).on('click', '.js-ajax-form-select', function (e) {
+            });
+
+            $('#<?= $choose_form_element_id ?>').on('click', '.js-ajax-form-select', function (e) {
                 e.preventDefault();
                 var select_id = $(this).data('id');
                 var select_title = $(this).data('title');
@@ -147,6 +155,7 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
 						            preloader.hide();
 					            });
 				            } else {
+					            preloader.hide();
 					            alert('Картинки с таким ID не существует!');
 				            }
 			            });
