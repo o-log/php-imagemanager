@@ -2,6 +2,7 @@
 
 namespace OLOG\ImageManager;
 
+use OLOG\GETAccess;
 use OLOG\Image\Image;
 use OLOG\ImageManager\Presets\Preset320x240;
 use OLOG\InterfaceAction;
@@ -34,7 +35,14 @@ class ImagePathByImageIdAjaxAction implements InterfaceAction
 		if (is_null($image_obj)) {
 			LayoutJSON::render(['success' => false], $this);
 		}
-		$image_path = $image_obj->getImageUrlByPreset(Preset320x240::class);
+
+		$preset_class_name = urldecode(GETAccess::getOptionalGetValue('preset_class_name', Preset320x240::class));
+
+		if (!class_exists($preset_class_name)) {
+			$preset_class_name = Preset320x240::class;
+		}
+
+		$image_path = $image_obj->getImageUrlByPreset($preset_class_name);
 
 		LayoutJSON::render([
 			'success' => true,
