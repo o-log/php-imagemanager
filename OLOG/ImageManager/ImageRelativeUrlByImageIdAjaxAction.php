@@ -12,7 +12,7 @@ class ImageRelativeUrlByImageIdAjaxAction implements InterfaceAction
 	protected $image_id;
 	protected $image_preset_alias;
 
-	public function __construct($image_id, $image_preset_alias = null)
+	public function __construct($image_id, $image_preset_alias)
 	{
 		$this->image_id = $image_id;
 		if (!$image_preset_alias) {
