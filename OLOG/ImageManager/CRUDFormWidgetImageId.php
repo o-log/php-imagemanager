@@ -67,17 +67,17 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
 
         $html .= '</div>';
 
+	    $html .= '<div id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_img_box">';
         if ($field_value) {
             $image_obj = \OLOG\Image\Image::factory($field_value, false);
             if ($image_obj) {
                 $image_url = $image_obj->getImageUrlByPreset(Preset320x240::class);
                 if ($image_url != '') {
-	                $html .= '<div style="margin-top: 15px;" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_img_box">';
-		            $html .= '<img id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_img" src="' . \OLOG\Sanitize::sanitizeUrl($image_url) . '"/>';
-	                $html .= '</div>';
+		            $html .= '<img style="margin-top: 15px;" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_img" src="' . \OLOG\Sanitize::sanitizeUrl($image_url) . '"/>';
                 }
             }
         }
+	    $html .= '</div>';
 
         $html .= BT::modal($choose_form_element_id, 'Выбрать');
 
@@ -137,30 +137,32 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
                 }
             });
 
-            $input.on('change', function () {
-	            var $input = $('#<?= $select_element_id ?>');
-	            var $image = $('#<?= $select_element_id ?>_img');
-	            var $image_box = $('#<?= $select_element_id ?>_img_box');
-	            if ($image.length == 0) {
-		            $image = $('<img id="<?= $select_element_id ?>_img">');
-		            $image_box.html($image);
-	            }
-	            var image_id = $input.val();
-	            if (image_id != '') {
-		            preloader.show();
-		            $.ajax('/imagemanager/image_path_ajax/' + image_id)
-			            .done(function (data) {
-				            if (data.success) {
-					            $image.attr('src', data.image_path).on('load', function () {
-						            preloader.hide();
-					            });
-				            } else {
-					            preloader.hide();
-					            alert('Картинки с таким ID не существует!');
-				            }
-			            });
-	            }
-            });
+	        $input.on('change', function () {
+		        var $input = $('#<?= $select_element_id ?>');
+		        var $image = $('#<?= $select_element_id ?>_img');
+		        var $image_box = $('#<?= $select_element_id ?>_img_box');
+		        if ($image.length == 0) {
+			        $image = $('<img style="margin-top: 15px;" id="<?= $select_element_id ?>_img">');
+			        $image_box.html($image);
+		        }
+		        var image_id = $input.val();
+		        if (image_id != '') {
+			        preloader.show();
+			        var url = ('<?= (new ImageRelativeUrlByImageIdAjaxAction('#IMAGE#', '#PRESET#'))->url() ?>').replace("#IMAGE#/#PRESET#","");
+
+			        $.ajax(url + image_id)
+				        .done(function (data) {
+					        if (data.success) {
+						        $image.attr('src', data.image_path).on('load', function () {
+							        preloader.hide();
+						        });
+					        } else {
+						        preloader.hide();
+						        alert('Картинки с таким ID не существует!');
+					        }
+				        });
+		        }
+	        });
         </script>
 
         <?php
