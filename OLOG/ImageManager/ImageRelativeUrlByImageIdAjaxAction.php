@@ -7,23 +7,29 @@ use OLOG\ImageManager\Presets\Preset320x240;
 use OLOG\InterfaceAction;
 use OLOG\Layouts\LayoutJSON;
 
-class ImagePathByImageIdAjaxAction implements InterfaceAction
+class ImageRelativeUrlByImageIdAjaxAction implements InterfaceAction
 {
 	protected $image_id;
+	protected $image_preset_alias;
 
-	public function __construct($image_id)
+	public function __construct($image_id, $image_preset_alias)
 	{
 		$this->image_id = $image_id;
+		if (!$image_preset_alias) {
+			$this->image_preset_alias = (new Preset320x240())->getAlias();
+		} else {
+			$this->image_preset_alias = $image_preset_alias;
+		}
 	}
 
 	static public function urlMask()
 	{
-		return '/imagemanager/image_path_ajax/(\d+)';
+		return '/imagemanager_ajax/image_relative_url/(\d+)/?(.*)?';
 	}
 
 	public function url()
 	{
-		return '/imagemanager/image_path_ajax/' . $this->image_id;
+		return '/imagemanager_ajax/image_relative_url/' . $this->image_id . '/' . $this->image_preset_alias;
 	}
 
 	public function action()
@@ -34,7 +40,11 @@ class ImagePathByImageIdAjaxAction implements InterfaceAction
 		if (is_null($image_obj)) {
 			LayoutJSON::render(['success' => false], $this);
 		}
-		$image_path = $image_obj->getImageUrlByPreset(Preset320x240::class);
+
+		$preset_class_name = ImageManager::getPresetClassNameByAlias($this->image_preset_alias);
+		\OLOG\Exits::exit404If(!$preset_class_name);
+
+		$image_path = $image_obj->getImageUrlByPreset($preset_class_name);
 
 		LayoutJSON::render([
 			'success' => true,
