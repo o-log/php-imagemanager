@@ -90,12 +90,12 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
 		    });
 
 	        $('#<?= $choose_form_element_id ?>').on('shown.bs.modal', function (e) {
-		        preloader.show();
+		        OLOG.preloader.show();
                 $.ajax({
                     url: "<?= $this->getAjaxActionUrl() ?>"
                 }).success(function(received_html) {
                     $('#<?= $choose_form_element_id ?> .modal-body').html(received_html);
-	                preloader.hide();
+	                OLOG.preloader.hide();
                 });
             });
 
@@ -147,17 +147,17 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
 		        }
 		        var image_id = $input.val();
 		        if (image_id != '') {
-			        preloader.show();
+			        OLOG.preloader.show();
 			        var url = ('<?= (new ImageRelativeUrlByImageIdAjaxAction('#IMAGE#', '#PRESET#'))->url() ?>').replace("#IMAGE#/#PRESET#","");
 
 			        $.ajax(url + image_id)
 				        .done(function (data) {
 					        if (data.success) {
 						        $image.attr('src', data.image_path).on('load', function () {
-							        preloader.hide();
+							        OLOG.preloader.hide();
 						        });
 					        } else {
-						        preloader.hide();
+						        OLOG.preloader.hide();
 						        alert('Картинки с таким ID не существует!');
 					        }
 				        });
