@@ -24,7 +24,10 @@ class ImageListAction extends ImagemanagerAdminActionsBaseProxy implements
     {
         \OLOG\Exits::exit403If(!\OLOG\Auth\Operator::currentOperatorHasAnyOfPermissions([\OLOG\ImageManager\Permissions::PERMISSION_PHPIMAGEMANAGER_MANAGE_IMAGES]));
 
-        $html = '';
+	    $table_id = 'ImageList_table_3245klb34ojh34y5';
+	    $form_id = 'ImageList_form_3245klb34ojh34y5';
+
+	    $html = '';
         $html .= \OLOG\CRUD\CRUDTable::html(
             \OLOG\Image\Image::class,
             \OLOG\CRUD\CRUDForm::html(
@@ -44,7 +47,10 @@ class ImageListAction extends ImagemanagerAdminActionsBaseProxy implements
                             false
                         )
                     )
-                ]
+                ],
+	            '',
+	            [],
+	            $form_id
             ),
             [
                 new \OLOG\CRUD\CRUDTableColumn('id', new \OLOG\CRUD\CRUDTableWidgetText('{this->id}')),
@@ -56,7 +62,8 @@ class ImageListAction extends ImagemanagerAdminActionsBaseProxy implements
                 new \OLOG\CRUD\CRUDTableColumn('Delete', new \OLOG\CRUD\CRUDTableWidgetDelete()),
             ],
             [],
-            'id desc'
+            'id desc',
+	        $table_id
         );
 
         AdminLayoutSelector::render($html, $this);
