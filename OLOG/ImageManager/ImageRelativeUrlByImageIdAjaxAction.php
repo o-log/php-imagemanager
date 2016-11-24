@@ -48,7 +48,10 @@ class ImageRelativeUrlByImageIdAjaxAction implements InterfaceAction
 
 		LayoutJSON::render([
 			'success' => true,
-			'image_path' => $image_path
+			'image_path' => $image_path,
+            'image_title' => $image_obj->getTitle(),
+            'image_copyright_text' => $image_obj->getCopyrightText(),
+            'image_copyright_url' => $image_obj->getCopyrightUrl()
 		], $this);
 	}
 }
