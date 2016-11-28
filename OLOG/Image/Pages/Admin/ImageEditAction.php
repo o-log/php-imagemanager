@@ -72,6 +72,14 @@ class ImageEditAction extends ImagemanagerAdminActionsBaseProxy implements
                     'Ссылка копирайта',
                     new \OLOG\CRUD\CRUDFormWidgetInput('copyright_url')
                 ),
+                new \OLOG\CRUD\CRUDFormRow(
+                    'Storage name',
+                    new \OLOG\CRUD\CRUDFormWidgetHtml($image_obj->getStorageName())
+                ),
+                new \OLOG\CRUD\CRUDFormRow(
+                    'File path in storage',
+                    new \OLOG\CRUD\CRUDFormWidgetHtml($image_obj->getFilePathInStorage())
+                )
             ]
         );
 

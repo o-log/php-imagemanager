@@ -54,9 +54,7 @@ class ImageListAction extends ImagemanagerAdminActionsBaseProxy implements
             ),
             [
                 new \OLOG\CRUD\CRUDTableColumn('id', new \OLOG\CRUD\CRUDTableWidgetText('{this->id}')),
-                new \OLOG\CRUD\CRUDTableColumn('Название', new \OLOG\CRUD\CRUDTableWidgetText('{this->title}')),
-                new \OLOG\CRUD\CRUDTableColumn('Storage name', new \OLOG\CRUD\CRUDTableWidgetText('{this->storage_name}')),
-                new \OLOG\CRUD\CRUDTableColumn('File path in storage', new \OLOG\CRUD\CRUDTableWidgetText('{this->file_path_in_storage}')),
+                new \OLOG\CRUD\CRUDTableColumn('Название', new \OLOG\CRUD\CRUDTableWidgetHtml('{this->title}<br />{this->copyright_text}<br />{this->copyright_url}')),
                 new \OLOG\CRUD\CRUDTableColumn('', new \OLOG\ImageManager\CRUDTableWidgetImage('{this->id}')),
                 new \OLOG\CRUD\CRUDTableColumn('Edit', new \OLOG\CRUD\CRUDTableWidgetTextWithLink('Edit', (new ImageEditAction('{this->id}'))->url())),
                 new \OLOG\CRUD\CRUDTableColumn('Delete', new \OLOG\CRUD\CRUDTableWidgetDelete()),
