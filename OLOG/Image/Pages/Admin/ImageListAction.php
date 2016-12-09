@@ -53,11 +53,14 @@ class ImageListAction extends ImagemanagerAdminActionsBaseProxy implements
 	            $form_id
             ),
             [
-                new \OLOG\CRUD\CRUDTableColumn('id', new \OLOG\CRUD\CRUDTableWidgetText('{this->id}')),
-                new \OLOG\CRUD\CRUDTableColumn('Название', new \OLOG\CRUD\CRUDTableWidgetHtml('{this->title}<br />{this->copyright_text}<br />{this->copyright_url}')),
                 new \OLOG\CRUD\CRUDTableColumn('', new \OLOG\ImageManager\CRUDTableWidgetImage('{this->id}')),
-                new \OLOG\CRUD\CRUDTableColumn('Edit', new \OLOG\CRUD\CRUDTableWidgetTextWithLink('Edit', (new ImageEditAction('{this->id}'))->url())),
-                new \OLOG\CRUD\CRUDTableColumn('Delete', new \OLOG\CRUD\CRUDTableWidgetDelete()),
+                new \OLOG\CRUD\CRUDTableColumn(
+                    '',
+                    new \OLOG\CRUD\CRUDTableWidgetHtml(
+                        '<a href="' . (new ImageEditAction('{this->id}'))->url() . '">{this->title}<br />{this->copyright_text}<br />{this->copyright_url}</a>'
+                    )
+                ),
+                new \OLOG\CRUD\CRUDTableColumn('', new \OLOG\CRUD\CRUDTableWidgetDelete()),
             ],
             [],
             'id desc',
