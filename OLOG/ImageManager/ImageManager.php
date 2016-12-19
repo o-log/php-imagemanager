@@ -40,7 +40,7 @@ class ImageManager
             \OLOG\Exits::exit404If(!file_exists($image_path_in_file_system));
             $this->moveImageByPreset($image_path_in_storage, $preset_class_name);
         } else {
-            error_log("PHP Fatal error. Obtain to generate existing in presets file" . $fullpath );
+            error_log("PHP Fatal error. Request to existing file: " . $fullpath );
         }
         $ext = pathinfo($fullpath, PATHINFO_EXTENSION);
 
