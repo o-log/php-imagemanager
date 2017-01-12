@@ -76,6 +76,7 @@ class ImageManager
 
     public static function generateNewImageFileNameAndPath($file_ext)
     {
+        //hostname добавляем для диагностики @todo убрать hostname после диагностики
         $md5_filename = md5(uniqid('image_', true)) . '_'. mbereg_replace("[^\d]","",gethostname()) ;
         $first_folder_name = substr($md5_filename, 0, 2);
         $second_folder_name = substr($md5_filename, 2, 2);
