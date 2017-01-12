@@ -76,7 +76,7 @@ class ImageManager
 
     public static function generateNewImageFileNameAndPath($file_ext)
     {
-        $md5_filename = md5(uniqid('image_', true));
+        $md5_filename = md5(uniqid('image_', true)) . '_'. mbereg_replace("[^\d]","",gethostname()) ;
         $first_folder_name = substr($md5_filename, 0, 2);
         $second_folder_name = substr($md5_filename, 2, 2);
         $full_folders_path = $first_folder_name . DIRECTORY_SEPARATOR . $second_folder_name;
