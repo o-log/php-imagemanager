@@ -6,9 +6,11 @@ use OLOG\BT\BT;
 use OLOG\CRUD\CRUDFieldsAccess;
 use OLOG\CRUD\InterfaceCRUDFormWidget;
 use OLOG\HTML;
+use OLOG\Image\Image;
 use OLOG\Image\Pages\Admin\ImageEditAction;
 use OLOG\ImageManager\Presets\Preset320x240;
 use OLOG\Preloader;
+use OLOG\Sanitize;
 
 class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
 {
@@ -36,8 +38,8 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
 
         $html = '';
 
+        # Form
         $html .= HTML::tag('div', ['class' => 'input-group'], function () {
-
             if ($this->getAjaxActionUrl()) {
                 HTML::echoTag('span', ['class' => 'input-group-btn'], function () {
                     HTML::echoTag('button', [
@@ -66,6 +68,7 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
             ], '');
 
             HTML::echoTag('input', [
+                ($this->getIsRequired() ? 'required' : 'no-required') => 'true',
                 'readonly' => 'true',
                 'type' => 'input',
                 'class' => 'form-control',
@@ -86,6 +89,7 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
             });
         });
 
+        # Preview
         $html .= HTML::tag('div', ['id' => $this->getSelectElementId() . '_img_box'], function () {
             if ($this->getFieldValue()) {
                 $image_obj = \OLOG\Image\Image::factory($this->getFieldValue(), false);
@@ -102,6 +106,7 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
             }
         });
 
+        # Popup
         $html .= BT::modal($this->getChooseFormElementId(), 'Выбрать');
 
         ob_start(); ?>
@@ -109,7 +114,6 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
         <?= Preloader::preloaderJsHtml() ?>
 
 		<script>
-
 
             $('#<?= $this->getChooseFormElementId() ?>').on('hidden.bs.modal', function (e) {
                 $('#<?= $this->getChooseFormElementId() ?> .modal-body').html('');
