@@ -176,7 +176,7 @@ class ImageManager
      * @return string
      * @throws \Exception
      */
-    protected static function getPresetAliasByClassName($preset_class_name)
+    public static function getPresetAliasByClassName($preset_class_name)
     {
         /**
          * @var $image_preset_obj ImageManagerPresetInterface

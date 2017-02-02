@@ -120,12 +120,21 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
             });
 
             $('#<?= $this->getChooseFormElementId() ?>').on('shown.bs.modal', function (e) {
-                OLOG.preloader.show();
                 $.ajax({
-                    url: "<?= $this->getAjaxActionUrl() ?>"
-                }).success(function (received_html) {
-                    $('#<?= $this->getChooseFormElementId() ?> .modal-body').html(received_html);
-                    OLOG.preloader.hide();
+                    url: '<?= $this->getAjaxActionUrl() ?>',
+                    method: 'GET',
+                    beforeSend: function () {
+                        OLOG.preloader.show();
+                    },
+                    complete: function () {
+                        OLOG.preloader.hide();
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        console.log(XMLHttpRequest, textStatus, errorThrown);
+                    },
+                    success: function (responce_html) {
+                        $('#<?= $this->getChooseFormElementId() ?> .modal-body').html(responce_html);
+                    }
                 });
             });
 
@@ -177,19 +186,28 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
                 var image_id = $input.val();
                 if (image_id != '') {
                     OLOG.preloader.show();
-                    var url = ('<?= (new ImageRelativeUrlByImageIdAjaxAction('#IMAGE#', '#PRESET#'))->url() ?>').replace("#IMAGE#/#PRESET#", "");
+                    var url = ('<?= (new ImageRelativeUrlByImageIdAjaxAction('#IMAGE#', '#PRESET#'))->url() ?>').replace("#IMAGE#", image_id).replace("#PRESET#", '<?= ImageManager::getPresetAliasByClassName($this->getPresetClass()) ?>');
 
-                    $.ajax(url + image_id)
-                        .done(function (data) {
-                            if (data.success) {
-                                $image.attr('src', data.image_path).on('load', function () {
-                                    OLOG.preloader.hide();
-                                });
+                    $.ajax({
+                        url: url,
+                        method: 'GET',
+                        beforeSend: function () {
+                            OLOG.preloader.show();
+                        },
+                        complete: function () {
+                            OLOG.preloader.hide();
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            console.log(XMLHttpRequest, textStatus, errorThrown);
+                        },
+                        success: function (responce) {
+                            if (responce.success) {
+                                $image.attr('src', responce.image_path);
                             } else {
-                                OLOG.preloader.hide();
                                 alert('Картинки с таким ID не существует!');
                             }
-                        });
+                        }
+                    });
                 }
             });
 
