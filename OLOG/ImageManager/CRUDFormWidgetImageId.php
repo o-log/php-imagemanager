@@ -19,8 +19,7 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
     protected $ajax_action_url;
     protected $is_required;
     protected $preset_class;
-    protected $select_element_id;
-    protected $choose_form_element_id;
+    protected $selector;
 
     public function __construct($field_name, $ajax_action_url = null, $is_required = false, $preset_class = Preset320x240::class)
     {
@@ -28,8 +27,7 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
         $this->setAjaxActionUrl($ajax_action_url);
         $this->setIsRequired($is_required);
         $this->setPresetClass($preset_class);
-        $this->setSelectElementId(uniqid('js_select_'));
-        $this->setChooseFormElementId(uniqid('collapse_'));
+        $this->setSelector(uniqid('js_select_'));
     }
 
     public function html($obj)
@@ -45,8 +43,7 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
                     HTML::echoTag('button', [
                         'type' => 'button',
                         'class' => 'btn btn-default',
-                        'data-toggle' => 'modal',
-                        'data-target' => '#' . $this->getChooseFormElementId()
+                        'id' => $this->getSelector() . '_choose_btn'
                     ], '<span class="glyphicon glyphicon-folder-open"></span>');
                 });
             }
@@ -54,15 +51,14 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
             HTML::echoTag('span', ['class' => 'input-group-btn'], function () {
                 HTML::echoTag('button', [
                     'type' => 'button',
-                    'id' => $this->getSelectElementId() . '_btn_is_null',
-                    'class' => 'btn btn-default',
-                    'data-toggle' => 'modal'
+                    'id' => $this->getSelector() . '_btn_is_null',
+                    'class' => 'btn btn-default'
                 ], '<span class="glyphicon glyphicon-remove"></span>');
             });
 
             HTML::echoTag('input', [
                 'type' => 'hidden',
-                'id' => $this->getSelectElementId() . '_is_null',
+                'id' => $this->getSelector() . '_is_null',
                 'name' => $this->getFieldName() . '___is_null',
                 'value' => (is_null($this->getFieldValue()) ? '1' : '')
             ], '');
@@ -72,25 +68,23 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
                 'readonly' => 'true',
                 'type' => 'input',
                 'class' => 'form-control',
-                'id' => $this->getSelectElementId(),
+                'id' => $this->getSelector(),
                 'name' => $this->getFieldName(),
-                'value' => $this->getFieldValue(),
-                'data-field' => $this->getSelectElementId() . '_text'
+                'value' => $this->getFieldValue()
             ], '');
 
             HTML::echoTag('span', ['class' => 'input-group-btn'], function () {
                 HTML::echoTag('button', [
                     (!is_null($this->getFieldValue()) ? 'no-disabled' : 'disabled') => 'true',
                     'type' => 'button',
-                    'id' => $this->getSelectElementId() . '_btn_link',
-                    'class' => 'btn btn-default',
-                    'data-toggle' => 'modal'
+                    'id' => $this->getSelector() . '_btn_link',
+                    'class' => 'btn btn-default'
                 ], 'Перейти');
             });
         });
 
         # Preview
-        $html .= HTML::tag('div', ['id' => $this->getSelectElementId() . '_img_box'], function () {
+        $html .= HTML::tag('div', ['id' => $this->getSelector() . '_img_box'], function () {
             if ($this->getFieldValue()) {
                 $image_obj = \OLOG\Image\Image::factory($this->getFieldValue(), false);
                 if ($image_obj) {
@@ -98,7 +92,7 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
                     if ($image_url != '') {
                         HTML::echoTag('img', [
                             'style' => 'margin-top: 15px;',
-                            'id' => $this->getSelectElementId() . '_img',
+                            'id' => $this->getSelector() . '_img',
                             'src' => $image_url
                         ], '');
                     }
@@ -107,111 +101,137 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
         });
 
         # Popup
-        $html .= BT::modal($this->getChooseFormElementId(), 'Выбрать');
+        $html .= BT::modal($this->getSelector() . '_choose_form', 'Выбрать');
 
         ob_start(); ?>
 
         <?= Preloader::preloaderJsHtml() ?>
 
 		<script>
+            var CRUDFormWidgetImageId = function (selector) {
 
-            $('#<?= $this->getChooseFormElementId() ?>').on('hidden.bs.modal', function (e) {
-                $('#<?= $this->getChooseFormElementId() ?> .modal-body').html('');
-            });
+                var self = this;
 
-            $('#<?= $this->getChooseFormElementId() ?>').on('shown.bs.modal', function (e) {
-                $.ajax({
-                    url: '<?= $this->getAjaxActionUrl() ?>',
-                    method: 'GET',
-                    beforeSend: function () {
-                        OLOG.preloader.show();
-                    },
-                    complete: function () {
-                        OLOG.preloader.hide();
-                    },
-                    error: function (XMLHttpRequest, textStatus, errorThrown) {
-                        console.log(XMLHttpRequest, textStatus, errorThrown);
-                    },
-                    success: function (responce_html) {
-                        $('#<?= $this->getChooseFormElementId() ?> .modal-body').html(responce_html);
-                    }
-                });
-            });
+                this.elemsSelectors = {
+                    select_element:     '#' + selector,
+                    choose_form:        '#' + selector + '_choose_form',
+                    choose_btn:         '#' + selector + '_choose_btn',
+                    button_link:        '#' + selector + '_btn_link',
+                    input_is_null:      '#' + selector + '_is_null',
+                    button_is_null:     '#' + selector + '_btn_is_null',
+                    preview_img:        '#' + selector + '_img',
+                    preview_img_box:    '#' + selector + '_img_box'
+                };
 
-            $('#<?= $this->getChooseFormElementId() ?>').on('click', '.js-ajax-form-select', function (e) {
-                e.preventDefault();
-                var select_id = $(this).data('id');
-                var select_title = $(this).data('title');
-                $('#<?= $this->getChooseFormElementId() ?>').modal('hide');
-                $('#<?= $this->getSelectElementId() ?>_text').text(select_title);
-                $('#<?= $this->getSelectElementId() ?>_btn_link').attr('disabled', false);
-                $('#<?= $this->getSelectElementId() ?>').val(select_id).trigger('change');
-                $('#<?= $this->getSelectElementId() ?>_is_null').val('');
-            });
+                this.modal = function () {
+                    $(this.elemsSelectors.choose_btn).on('click', function (e) {
+                        e.preventDefault();
 
-            $('#<?= $this->getSelectElementId() ?>_btn_is_null').on('click', function (e) {
-                e.preventDefault();
-                $('#<?= $this->getSelectElementId() ?>_text').text('');
-                $('#<?= $this->getSelectElementId() ?>_btn_link').attr('disabled', true);
-                $('#<?= $this->getSelectElementId() ?>').val('').trigger('change');
-                $('#<?= $this->getSelectElementId() ?>_is_null').val(1);
-                $('#<?= $this->getSelectElementId() ?>_img').remove();
-            });
-
-            $('#<?= $this->getSelectElementId() ?>_btn_link').on('click', function (e) {
-                var url = '<?= (new ImageEditAction('REFERENCED_ID'))->url() ?>';
-                var id = $('#<?= $this->getSelectElementId() ?>').val();
-                url = url.replace('REFERENCED_ID', id);
-
-                window.location = url;
-            });
-            var $input_is_null = $('#<?= $this->getSelectElementId() ?>_is_null');
-            var $input = $('#<?= $this->getSelectElementId() ?>');
-            $input.on('change', function () {
-                if ($(this).val() == '') {
-                    $input_is_null.val('1');
-                } else {
-                    $input_is_null.val('');
-                }
-            });
-
-            $input.on('change', function () {
-                var $input = $('#<?= $this->getSelectElementId() ?>');
-                var $image = $('#<?= $this->getSelectElementId() ?>_img');
-                var $image_box = $('#<?= $this->getSelectElementId() ?>_img_box');
-                if ($image.length == 0) {
-                    $image = $('<img style="margin-top: 15px;" id="<?= $this->getSelectElementId() ?>_img">');
-                    $image_box.html($image);
-                }
-                var image_id = $input.val();
-                if (image_id != '') {
-                    OLOG.preloader.show();
-                    var url = ('<?= (new ImageRelativeUrlByImageIdAjaxAction('#IMAGE#', '#PRESET#'))->url() ?>').replace("#IMAGE#", image_id).replace("#PRESET#", '<?= ImageManager::getPresetAliasByClassName($this->getPresetClass()) ?>');
-
-                    $.ajax({
-                        url: url,
-                        method: 'GET',
-                        beforeSend: function () {
-                            OLOG.preloader.show();
-                        },
-                        complete: function () {
-                            OLOG.preloader.hide();
-                        },
-                        error: function (XMLHttpRequest, textStatus, errorThrown) {
-                            console.log(XMLHttpRequest, textStatus, errorThrown);
-                        },
-                        success: function (responce) {
-                            if (responce.success) {
-                                $image.attr('src', responce.image_path);
-                            } else {
-                                alert('Картинки с таким ID не существует!');
+                        $.ajax({
+                            url: '<?= $this->getAjaxActionUrl() ?>',
+                            method: 'GET',
+                            beforeSend: function () {
+                                OLOG.preloader.show();
+                            },
+                            complete: function () {
+                                OLOG.preloader.hide();
+                            },
+                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                console.log(XMLHttpRequest, textStatus, errorThrown);
+                            },
+                            success: function (responce_html) {
+                                $(self.elemsSelectors.choose_form).modal("show");
+                                $(self.elemsSelectors.choose_form).find('.modal-body').html(responce_html);
                             }
-                        }
+                        });
                     });
-                }
-            });
+                    $(this.elemsSelectors.choose_form).on('hidden.bs.modal', function (e) {
+                        $(this).find('.modal-body').html('');
+                    });
+                    $(this.elemsSelectors.choose_form).on('click', '.js-ajax-form-select', function (e) {
+                        e.preventDefault();
+                        $(self.elemsSelectors.choose_form).modal('hide');
+                        $(self.elemsSelectors.button_link).attr('disabled', false);
+                        $(self.elemsSelectors.select_element).val($(this).data('id')).trigger('change');
+                        $(self.elemsSelectors.input_is_null).val('');
+                    });
+                };
 
+                this.input = function () {
+                    $(this.elemsSelectors.select_element).on('change', function () {
+                        if ($(this).val() == '') {
+                            $(self.elemsSelectors.input_is_null).val('1');
+                        } else {
+                            $(self.elemsSelectors.input_is_null).val('');
+                        }
 
+                        self.previewImages();
+                    });
+                };
+
+                this.isNull = function () {
+                    $(this.elemsSelectors.button_is_null).on('click', function (e) {
+                        e.preventDefault();
+                        $(self.elemsSelectors.select_element).val('').trigger('change');
+                        $(self.elemsSelectors.button_link).attr('disabled', true);
+                        $(self.elemsSelectors.input_is_null).val(1);
+                        $(self.elemsSelectors.preview_img).remove();
+                    });
+                };
+
+                this.link = function () {
+                    $(this.elemsSelectors.button_link).on('click', function (e) {
+                        e.preventDefault();
+                        var url = '<?= (new ImageEditAction('REFERENCED_ID'))->url() ?>';
+                        url = url.replace('REFERENCED_ID', $(self.elemsSelectors.select_element).val());
+                        window.location = url;
+                    });
+                };
+
+                this.previewImages = function () {
+                    var $image = $(this.elemsSelectors.preview_img);
+                    if ($image.length == 0) {
+                        $image = $('<img>', {
+                            style: 'margin-top: 15px;',
+                            id: this.elemsSelectors.preview_img
+                        });
+                        $(this.elemsSelectors.preview_img_box).html($image);
+                    }
+
+                    var image_id = $(this.elemsSelectors.select_element).val();
+                    if (image_id != '') {
+                        var url = ('<?= (new ImageRelativeUrlByImageIdAjaxAction('#IMAGE#', '#PRESET#'))->url() ?>').replace("#IMAGE#", image_id).replace("#PRESET#", '<?= ImageManager::getPresetAliasByClassName($this->getPresetClass()) ?>');
+
+                        $.ajax({
+                            url: url,
+                            method: 'GET',
+                            beforeSend: function () {
+                                OLOG.preloader.show();
+                            },
+                            complete: function () {
+                                OLOG.preloader.hide();
+                            },
+                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                console.log(XMLHttpRequest, textStatus, errorThrown);
+                            },
+                            success: function (responce) {
+                                if (responce.success) {
+                                    $image.attr('src', responce.image_path);
+                                } else {
+                                    alert('Картинки с таким ID не существует!');
+                                }
+                            }
+                        });
+                    }
+                };
+
+                // init
+                this.modal();
+                this.input();
+                this.isNull();
+                this.link();
+            };
+            new CRUDFormWidgetImageId('<?= $this->getSelector() ?>');
 		</script>
 
         <?php
@@ -303,33 +323,17 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
     /**
      * @return mixed
      */
-    public function getSelectElementId()
+    public function getSelector()
     {
-        return $this->select_element_id;
+        return $this->selector;
     }
 
     /**
      * @param mixed $select_element_id
      */
-    public function setSelectElementId($select_element_id)
+    public function setSelector($selector)
     {
-        $this->select_element_id = $select_element_id;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getChooseFormElementId()
-    {
-        return $this->choose_form_element_id;
-    }
-
-    /**
-     * @param mixed $choose_form_element_id
-     */
-    public function setChooseFormElementId($choose_form_element_id)
-    {
-        $this->choose_form_element_id = $choose_form_element_id;
+        $this->selector = $selector;
     }
 
 }
