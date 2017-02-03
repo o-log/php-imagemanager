@@ -113,14 +113,14 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
                 var self = this;
 
                 this.elemsSelectors = {
-                    select_element:     '#' + selector,
-                    choose_form:        '#' + selector + '_choose_form',
-                    choose_btn:         '#' + selector + '_choose_btn',
-                    button_link:        '#' + selector + '_btn_link',
-                    input_is_null:      '#' + selector + '_is_null',
-                    button_is_null:     '#' + selector + '_btn_is_null',
-                    preview_img:        '#' + selector + '_img',
-                    preview_img_box:    '#' + selector + '_img_box'
+                    select_element: '#' + selector,
+                    choose_form: '#' + selector + '_choose_form',
+                    choose_btn: '#' + selector + '_choose_btn',
+                    button_link: '#' + selector + '_btn_link',
+                    input_is_null: '#' + selector + '_is_null',
+                    button_is_null: '#' + selector + '_btn_is_null',
+                    preview_img: '#' + selector + '_img',
+                    preview_img_box: '#' + selector + '_img_box'
                 };
 
                 this.modal = function () {
@@ -136,9 +136,7 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
                             complete: function () {
                                 OLOG.preloader.hide();
                             },
-                            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                                console.log(XMLHttpRequest, textStatus, errorThrown);
-                            },
+                            error: self.errorShow,
                             success: function (responce_html) {
                                 $(self.elemsSelectors.choose_form).modal("show");
                                 $(self.elemsSelectors.choose_form).find('.modal-body').html(responce_html);
@@ -211,9 +209,7 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
                             complete: function () {
                                 OLOG.preloader.hide();
                             },
-                            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                                console.log(XMLHttpRequest, textStatus, errorThrown);
-                            },
+                            error: self.errorShow,
                             success: function (responce) {
                                 if (responce.success) {
                                     $image.attr('src', responce.image_path);
@@ -223,6 +219,41 @@ class CRUDFormWidgetImageId implements InterfaceCRUDFormWidget
                             }
                         });
                     }
+                };
+
+                this.errorShow = function (XMLHttpRequest, textStatus, errorThrown) {
+                    var $modal = $('<div>', {
+                        class: 'modal fade',
+                        role: 'dialog',
+                    });
+                    var $modal_dialog = $('<div>', {
+                        class: 'modal-dialog',
+                        role: 'document'
+                    });
+                    var $modal_content = $('<div>', {
+                        class: 'modal-content'
+                    });
+                    var $modal_header = $('<div>', {
+                        class: 'modal-header',
+                        html: '<button type="button" class="close" data-dismiss="modal">&times;</button><h4 class="modal-title">' + textStatus + ': ' + XMLHttpRequest.status + '</h4>'
+                    });
+                    var $modal_body = $('<div>', {
+                        class: 'modal-body',
+                        html: '<h2>' + errorThrown + '</h2><div>' + XMLHttpRequest.responseText + '</div>'
+                    });
+
+                    $modal_content.append($modal_header);
+                    $modal_content.append($modal_body);
+                    $modal_dialog.append($modal_content);
+                    $modal.append($modal_dialog);
+
+                    OLOG.preloader.hide();
+                    $modal.on('hidden.bs.modal', function (e) {
+                        $modal.remove();
+                    });
+                    $modal.modal('show');
+
+                    console.log(XMLHttpRequest, textStatus, errorThrown);
                 };
 
                 // init
