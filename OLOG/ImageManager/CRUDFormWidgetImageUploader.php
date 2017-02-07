@@ -13,14 +13,32 @@ class CRUDFormWidgetImageUploader implements InterfaceCRUDFormWidget
     protected $action_url;
     protected $storages_arr;
     protected $force_jpeg_image_format;
+    protected $is_required;
 
-    public function __construct($file_path_in_storage_field_name, $storage_field_name, $storages_arr, $action_url, $force_jpeg_image_format = true)
+    /**
+     * @return mixed
+     */
+    public function getIsRequired()
+    {
+        return $this->is_required;
+    }
+
+    /**
+     * @param mixed $is_required
+     */
+    public function setIsRequired($is_required)
+    {
+        $this->is_required = $is_required;
+    }
+
+    public function __construct($file_path_in_storage_field_name, $storage_field_name, $storages_arr, $action_url, $force_jpeg_image_format = true, $is_required = false)
     {
         $this->setFilePathInStorageFieldName($file_path_in_storage_field_name);
         $this->setStorageFieldName($storage_field_name);
         $this->setActionUrl($action_url);
         $this->setStoragesArr($storages_arr);
         $this->setForceJpegImageFormat($force_jpeg_image_format);
+        $this->setIsRequired($is_required);
     }
 
     /**
@@ -143,7 +161,7 @@ class CRUDFormWidgetImageUploader implements InterfaceCRUDFormWidget
                         ?>
                     </select>
 
-                    <input name="upload_image_file" type="file" class="form-control upload_image_file_input" id="<?= $file_input_id ?>" onchange="fileFieldOnChange(this);">
+                    <input <?php if ($this->getIsRequired()){echo ' required ';} ?> name="upload_image_file" type="file" class="form-control upload_image_file_input" id="<?= $file_input_id ?>" onchange="fileFieldOnChange(this);">
 
                     <div class="alert alert-danger" role="alert" style="display: none"></div>
                     <div class="progress" style="display: none">
