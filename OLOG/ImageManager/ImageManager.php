@@ -41,7 +41,7 @@ class ImageManager
             $this->moveImageByPreset($image_path_in_storage, $preset_class_name);
         } else {
             $file_create_time = filemtime($fullpath);
-            error_log("__PHP __Fatal error. Request to existing file: " . $fullpath .' (created at: '.$file_create_time.', request time: '.time().', host: ' .gethostname( ) . ' )'  );
+            //error_log("__PHP __Fatal error. Request to existing file: " . $fullpath .' (created at: '.$file_create_time.', request time: '.time().', host: ' .gethostname( ) . ' )'  );
         }
         $ext = pathinfo($fullpath, PATHINFO_EXTENSION);
 
