@@ -40,7 +40,8 @@ class ImageManager
             \OLOG\Exits::exit404If(!file_exists($image_path_in_file_system));
             $this->moveImageByPreset($image_path_in_storage, $preset_class_name);
         } else {
-            error_log("PHP Fatal error. Obtain to generate existing in presets file" . $fullpath );
+            $file_create_time = filemtime($fullpath);
+            error_log("__PHP __Fatal error. Request to existing file: " . $fullpath .' (created at: '.$file_create_time.', request time: '.time().', host: ' .gethostname( ) . ' )'  );
         }
         $ext = pathinfo($fullpath, PATHINFO_EXTENSION);
 
@@ -75,7 +76,8 @@ class ImageManager
 
     public static function generateNewImageFileNameAndPath($file_ext)
     {
-        $md5_filename = md5(uniqid('image_', true));
+        //hostname добавляем для диагностики @todo убрать hostname после диагностики
+        $md5_filename = md5(uniqid('image_', true)) . '_'. mbereg_replace("[^\d]","",gethostname()) ;
         $first_folder_name = substr($md5_filename, 0, 2);
         $second_folder_name = substr($md5_filename, 2, 2);
         $full_folders_path = $first_folder_name . DIRECTORY_SEPARATOR . $second_folder_name;
@@ -174,7 +176,7 @@ class ImageManager
      * @return string
      * @throws \Exception
      */
-    protected static function getPresetAliasByClassName($preset_class_name)
+    public static function getPresetAliasByClassName($preset_class_name)
     {
         /**
          * @var $image_preset_obj ImageManagerPresetInterface
