@@ -173,14 +173,10 @@ class Image implements
     public function getImageSizeObj()
     {
         $storage_name = $this->getStorageName();
-        if (!$storage_name) {
-            return new ImageSize(0, 0);
-        }
+        \OLOG\Assert::assert($storage_name != '');
 
         $file_path_in_storage = $this->getFilePathInStorage();
-        if (!$file_path_in_storage) {
-            return new ImageSize(0, 0);
-        }
+        \OLOG\Assert::assert($file_path_in_storage != '');
 
         $storage_obj = StorageFactory::getStorageObjByName($storage_name);
         $file_path_in_storage = $storage_obj->getFullFilePathOrUrlInStorage($file_path_in_storage);

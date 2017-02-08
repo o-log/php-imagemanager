@@ -6,8 +6,8 @@ namespace OLOG\Image;
 
 class ImageSize
 {
-    protected $width = 0;
-    protected $height = 0;
+    protected $width;
+    protected $height;
 
     /**
      * ImageSize constructor.
