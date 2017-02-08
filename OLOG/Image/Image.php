@@ -6,6 +6,7 @@ namespace OLOG\Image;
 use OLOG\ImageManager\ImageManager;
 use OLOG\Model\ActiveRecordHelper;
 use OLOG\Model\InterfaceFactory;
+use OLOG\Storage\StorageFactory;
 
 class Image implements
     \OLOG\Model\InterfaceFactory,
@@ -167,5 +168,25 @@ class Image implements
                 $this->copyright_url = 'http://'.$this->copyright_url;
             }
         }
+    }
+
+    public function getImageSizeObj()
+    {
+        $storage_name = $this->getStorageName();
+        if (!$storage_name) {
+            return new ImageSize(0, 0);
+        }
+
+        $file_path_in_storage = $this->getFilePathInStorage();
+        if (!$file_path_in_storage) {
+            return new ImageSize(0, 0);
+        }
+
+        $storage_obj = StorageFactory::getStorageObjByName($storage_name);
+        $file_path_in_storage = $storage_obj->getFullFilePathOrUrlInStorage($file_path_in_storage);
+
+        list($width, $height) = getimagesize($file_path_in_storage);
+
+        return new ImageSize($width, $height);
     }
 }
